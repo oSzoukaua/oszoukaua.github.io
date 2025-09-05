@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/x-icon" href="webhub_favicon.ico"/>
+<title>oSzoukaua's: Webhub</title>
+<style>
+  body {
+    margin: 0;
+    background-color: black;
+    font-family: monospace;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  .grid {
+    display: grid;
+    gap: 6px;
+    box-sizing: border-box;
+  }
+
+  .cell {
+    border: 1px dotted #333;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  .cell a {
+    color: #4ea3ff;
+    text-decoration: underline;
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .filler {
+    flex: 1;
+    font-size: 14px;
+    line-height: 1.2;
+    color: #555;
+    overflow-wrap: break-word;
+  }
+
+  @keyframes flicker {
+    0%, 49%, 51%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+
+  .flicker-text {
+    animation: flicker 8s infinite;
+  }
+</style>
+</head>
+<body>
+<div class="grid" id="grid"></div>
+
+<script>
+const grid = document.getElementById('grid');
+
+const links = [
+  { label: "www.ko-fi.com/oszoukaua", url: "https://ko-fi.com/oszoukaua", filler: "Support my work on Ko-fi." },
+  { label: "www.bsky.app/profile/oszoukaua.bsky.social", url: "https://bsky.app/profile/oszoukaua.bsky.social", filler: "Occasional posts on Blue Sky." },
+  { label: "www.pinterest.com/oSzoukaua", url: "https://pinterest.com/oSzoukaua", filler: "View my creations on Pinterest." },
+  { label: "www.twitch.tv/oszoukaua", url: "https://twitch.tv/oszoukaua", filler: "Watch my live streams on Twitch." },
+  { label: "www.temp", url: "tate/tate.html", filler: "All your timely needs" },
+  { label: "www.bsky.app/profile/oszuoptics.bsky.social", url: "https://bsky.app/profile/oszuoptics.bsky.social", filler: "Photography posts and adventures." }
+];
+
+const fillerDefaults = [
+"Network timeout occurred while fetching data.",
+"Insufficient permissions to access resource.",
+"Corrupted memory block detected during read operation.",
+"Unexpected packet loss prevented complete retrieval.",
+"Service unavailable due to maintenance window.",
+"Checksum mismatch, data integrity cannot be verified.",
+"Dependency failure in auxiliary module.",
+"Rate limit exceeded, retry later.",
+"Disk read error, unable to access storage sector.",
+"Resource temporarily locked by another process.",
+"Invalid configuration detected on startup.",
+"Authentication token expired, re-login required.",
+"Failed to resolve DNS hostname.",
+"Connection refused by remote host.",
+"Buffer overflow detected, operation aborted.",
+"File not found in specified directory.",
+"Unsupported file format encountered.",
+"Failed to allocate sufficient memory.",
+"Operation aborted due to user interrupt.",
+"Protocol mismatch detected during handshake.",
+"Hardware fault detected on controller unit.",
+"Data serialization error occurred.",
+"Unknown error code received from server.",
+"Timeout waiting for response from database.",
+"Insufficient storage space available.",
+"Permission denied writing to configuration file.",
+"Invalid parameter passed to function.",
+"Service crashed unexpectedly, restart required.",
+"SSL/TLS handshake failed.",
+"Malformed request received, cannot process.",
+"Dependency version conflict detected.",
+"Temporary network glitch, retrying operation.",
+"CPU usage exceeded safe threshold.",
+"Thread deadlock detected, operation cannot continue.",
+"Unexpected end of file encountered.",
+"Memory leak detected during operation.",
+"Resource quota exceeded for current session.",
+"Failed to acquire semaphore lock.",
+"Invalid session ID provided.",
+"File system read-only, cannot write.",
+"Operation failed due to transient error.",
+"Connection reset by peer.",
+"Hardware sensor returned out-of-range value.",
+"Error parsing configuration file.",
+"Database transaction rolled back due to conflict.",
+"Missing required environment variable.",
+"Encryption key not found for requested operation.",
+"Invalid command syntax.",
+"Packet fragmentation detected, cannot reassemble.",
+"Cache corruption detected, clearing cache.",
+"Authentication failed due to invalid credentials.",
+"Service dependency unavailable.",
+"Unsupported operation for current platform.",
+"Operation aborted due to timeout.",
+"Insufficient privileges to execute command.",
+"Checksum verification failed.",
+"Cannot open device, already in use.",
+"Failed to initialize subsystem.",
+"Unexpected response from API endpoint.",
+"Resource allocation failed.",
+"Configuration value out of allowed range.",
+"Failed to mount volume.",
+"Error reading from input stream.",
+"Failed to connect to message broker.",
+"Operation not implemented.",
+"License validation failed.",
+"Failed to start background process.",
+"Invalid index specified.",
+"Corrupted log file detected.",
+"Resource leak detected, closing handles.",
+"Operation canceled by system.",
+"Failed to write to output stream.",
+"Version mismatch between modules.",
+"System clock out of sync.",
+"Unreachable network segment.",
+"Invalid checksum in received packet.",
+"Operation blocked by security policy.",
+"Dependency module not loaded.",
+"Insufficient bandwidth for operation.",
+"Failed to parse response payload.",
+"Unexpected exception thrown.",
+"Operation cannot proceed while locked.",
+"Configuration change rejected.",
+"Invalid file descriptor.",
+"Data truncation occurred during write.",
+"Failed to authenticate with service.",
+"Cannot resolve symbolic link.",
+"Operation would exceed quota.",
+"Temporary service outage detected.",
+"Error accessing registry key.",
+"Device not recognized.",
+"Network interface down.",
+"Invalid memory access attempt.",
+"Failed to synchronize with peer.",
+"Operation aborted due to corrupted state.",
+"Invalid URL format.",
+"Operation not allowed in current mode.",
+"Service returned unknown status code.",
+];
+
+function buildGrid() {
+  grid.innerHTML = '';
+
+  const cellWidth = 240;
+  const cellHeightRatio = 2 / 3;
+  const gap = 6;
+  const minLinks = links.length;
+
+  let maxCols = Math.floor((window.innerWidth + gap) / (cellWidth + gap));
+  let maxRows = Math.floor((window.innerHeight + gap) / (cellWidth * cellHeightRatio + gap));
+
+  let innerCols = Math.max(1, maxCols - 2);
+  let innerRows = Math.max(1, maxRows - 2);
+
+  if (innerCols * innerRows < minLinks) {
+    innerCols = Math.ceil(Math.sqrt(minLinks));
+    innerRows = Math.ceil(minLinks / innerCols);
+    maxCols = innerCols + 2;
+    maxRows = innerRows + 2;
+  }
+
+  maxCols += 1;
+  maxRows += 1;
+
+  grid.style.gridTemplateColumns = `repeat(${maxCols}, ${cellWidth}px)`;
+  grid.style.gridAutoRows = `${cellWidth * cellHeightRatio}px`;
+  grid.style.width = `${maxCols * cellWidth + (maxCols - 1) * gap}px`;
+  grid.style.height = `${maxRows * cellWidth * cellHeightRatio + (maxRows - 1) * gap}px`;
+
+  const totalCells = maxCols * maxRows;
+  const cellsArray = Array(totalCells).fill(null);
+
+  const innerIndices = [];
+  for (let r = 1; r < maxRows - 1; r++) {
+    for (let c = 1; c < maxCols - 1; c++) {
+      innerIndices.push(r * maxCols + c);
+    }
+  }
+
+  links.forEach(link => {
+    let index;
+    do {
+      const randIdx = Math.floor(Math.random() * innerIndices.length);
+      index = innerIndices[randIdx];
+      innerIndices.splice(randIdx, 1);
+    } while (cellsArray[index] !== null);
+    cellsArray[index] = link;
+  });
+
+  cellsArray.forEach((entry, i) => {
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+
+    const linkEl = document.createElement('a');
+    linkEl.className = 'flicker-text';
+    if (entry) {
+      linkEl.textContent = entry.label;
+      linkEl.href = entry.url;
+    } else {
+      linkEl.textContent = `Failed to load entry ${i + 1}`;
+      linkEl.href = "#";
+      linkEl.style.color = '#888';
+      linkEl.style.textDecoration = 'none';
+    }
+
+    const filler = document.createElement('div');
+    filler.className = 'filler flicker-text';
+    filler.textContent = entry ? entry.filler : fillerDefaults[i % fillerDefaults.length];
+
+    cell.appendChild(linkEl);
+    cell.appendChild(filler);
+    grid.appendChild(cell);
+  });
+
+  document.querySelectorAll('.flicker-text').forEach(el => {
+    const delay = Math.random() * 200;
+    const duration = Math.random() * 20;
+    el.style.animationDelay = `${delay}s`;
+    el.style.animationDuration = `${duration}s`;
+  });
+}
+
+window.addEventListener('resize', buildGrid);
+buildGrid();
+</script>
+</body>
+</html>
