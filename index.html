@@ -3,69 +3,121 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link rel="icon" type="image/x-icon" href="webhub_favicon.ico"/>
-<title>oSzoukaua's: Work</title>
+<link rel="icon" type="image/x-icon" href="webhub_favicon.ico" />
+<title>oSzoukaua’s Work</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
 <style>
 :root {
-  --bg: #0A0C0A;
+  --bg: #0a0c0a;
   --card: #121412;
   --text: #e8eaf0;
   --muted: #9aa3b2;
   --radius: 6px;
+  --accent: #6cf2c2;
+  --danger: #f26c6c;
 }
 
-/* ===== Global ===== */
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-body { background: var(--bg); color: var(--text); line-height: 1.5; }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
 
-/* ===== Toolbar ===== */
+body {
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
 #toolbar {
   position: fixed;
-  left: 0; top: 0;
-  width: 56px; height: 100vh;
-  background: linear-gradient(to bottom, #2D302E, #0A0C0A);
-  display: flex; flex-direction: column;
-  padding: 4px 4px; gap: 10px; z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 56px;
+  height: 100vh;
+  background: linear-gradient(to bottom, #2d302e, #0a0c0a);
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+  gap: 10px;
+  z-index: 1000;
   border-radius: 8px;
 }
 
 .toolbar-section {
-  display: flex; flex-direction: column;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  background: linear-gradient(to bottom, #282D28, #121412);
-  border: 2px #353836 solid;
+  background: linear-gradient(to bottom, #282d28, #121412);
+  border: 2px solid #353836;
   border-radius: 8px;
-  position: relative; 
 }
 
-.toolbar-section a, .toolbar-section button {
-  display: flex; justify-content: center; align-items: center;
-  width: 48px; height: 48px;
+.toolbar-section a,
+.toolbar-section button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+  height: 48px;
   border-radius: 6px;
   text-decoration: none;
-  color: #DCE2DC; font-size: 20px;
-  background: none; border: none; cursor: pointer;
+  color: #dce2dc;
+  font-size: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
   position: relative;
 }
 
-.toolbar-section a:hover, .toolbar-section button:hover { color: #6cf2c2; }
-.toolbar-section a .tooltip, .toolbar-section button .tooltip {
-  position: absolute; left: 60px; top: 50%; transform: translateY(-50%);
-  background: #151922; padding: 4px 8px; border-radius: 4px;
-  font-size: 12px; white-space: nowrap; opacity: 0; pointer-events: none;
+.toolbar-section a:hover,
+.toolbar-section button:hover {
+  color: var(--accent);
 }
-.toolbar-section a:hover .tooltip, .toolbar-section button:hover .tooltip { opacity: 1; }
 
-.spacer { width: 48px; height: 48px; }
-.dash-spacer { width: 36px; height: 3px; background: rgba(255,255,255,0.15); border-radius: 2px; margin: 4px 0; }
+.toolbar-section a .tooltip,
+.toolbar-section button .tooltip {
+  position: absolute;
+  left: 60px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #151922;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+}
 
-/* Inputs */
+.toolbar-section a:hover .tooltip,
+.toolbar-section button:hover .tooltip {
+  opacity: 1;
+}
+
+.spacer {
+  width: 48px;
+  height: 48px;
+}
+
+.dash-spacer {
+  width: 36px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+  margin: 4px 0;
+}
+
 .toolbar-section input,
-.toolbar-section select,
-#tagFilter { display: none; position: absolute; left: 56px; z-index: 10; }
+#tagFilter {
+  display: none;
+  position: absolute;
+  left: 56px;
+  z-index: 10;
+}
 
-/* ===== Tag tree ===== */
 #tagFilter {
   background: #121412;
   border: 1px solid #374151;
@@ -78,29 +130,10 @@ body { background: var(--bg); color: var(--text); line-height: 1.5; }
 }
 
 .tag-main {
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
   margin: 4px 0;
-  gap: 2px;
 }
-
-.tag-main .toggle {
-  font-size: 12px;
-  opacity: 0.7;
-}
-.tag-main .toggle:hover { opacity: 1; }
-
-.tag-main span { user-select: none; }
-.tag-sub { display: flex; gap: 4px; margin: 2px 0; flex-direction: row; }
-.tag-sub span.label { flex-grow: 1; cursor: pointer; }
-.tag-sub span.status { cursor: default; font-weight: bold; user-select: none; display: flex; gap:2px; }
-.tag-sub span.status span { cursor: pointer; padding: 0 2px; }
 
 .tag-header {
-  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -108,18 +141,59 @@ body { background: var(--bg); color: var(--text); line-height: 1.5; }
   padding: 2px 4px;
   border-radius: 4px;
 }
-.tag-header:hover { background: rgba(255,255,255,0.05); }
 
-#tagFilter::-webkit-scrollbar { width: 6px; }
-#tagFilter::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
+.tag-header:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
 
-/* ===== Main ===== */
-main { margin-left: 57px; padding: 7px; }
+.tag-main .toggle {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.tag-sub {
+  display: flex;
+  gap: 4px;
+  margin: 2px 0;
+  padding-left: 10px;
+}
+
+.tag-sub span.label {
+  flex-grow: 1;
+  cursor: pointer;
+}
+
+.tag-sub span.status {
+  font-weight: bold;
+  display: flex;
+  gap: 2px;
+}
+
+.tag-sub span.status span {
+  cursor: pointer;
+  padding: 0 2px;
+}
+
+#tagFilter::-webkit-scrollbar {
+  width: 6px;
+}
+
+#tagFilter::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+main {
+  margin-left: 57px;
+  padding: 7px;
+}
+
 .grid {
   display: grid;
-  grid-template-columns: repeat(5,1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 0.5rem;
 }
+
 .card {
   background: var(--card);
   border-radius: var(--radius);
@@ -127,22 +201,67 @@ main { margin-left: 57px; padding: 7px; }
   border: 1px solid #1f2531;
   transition: border-color 0.1s ease, transform 0.1s ease, opacity 0.1s ease;
   cursor: pointer;
+  opacity: 0;
 }
-.card.visible { opacity: 1; }
-.card:hover { border-color: #2a3242; transform: translateY(-2px); }
+
+.card.visible {
+  opacity: 1;
+}
+
+.card:hover {
+  border-color: #2a3242;
+  transform: translateY(-2px);
+}
 
 .thumb {
-  height: 256px; display: flex; align-items: center; justify-content: center;
-  background: linear-gradient(135deg, #282D28, #121412);
+  height: 256px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #282d28, #121412);
 }
-.thumb img { width:100%; height:100%; object-fit:cover; }
 
-.card-content { padding: 0.4rem; }
-.tag-sub-card { display:inline-block; font-size:0.6rem; color:#fff; border: 1px solid #fff; margin-right: 3px; padding: 0px 4px; border-radius: 4px; margin-bottom:2px; }
-.tag-sub-card:hover { filter: brightness(1.2); cursor: help; }
-.title { font-size:0.95rem; font-weight:500; margin-bottom:0.2rem; }
-.desc { font-size:0.8rem; color: #C3DBD0; }
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
+.card-content {
+  padding: 0.4rem;
+}
+
+.tag-sub-card {
+  display: inline-block;
+  font-size: 0.6rem;
+  color: #fff;
+  border: 1px solid #fff;
+  margin-right: 3px;
+  padding: 0 4px;
+  border-radius: 4px;
+  margin-bottom: 2px;
+}
+
+.tag-sub-card:hover {
+  filter: brightness(1.2);
+  cursor: help;
+}
+
+.title {
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin-bottom: 0.2rem;
+}
+
+.desc {
+  font-size: 0.8rem;
+  color: #c3dbd0;
+}
+
+.toolbar-section button.active {
+  color: var(--accent);
+  box-shadow: inset 0 0 0 1px rgba(108, 242, 194, 0.4);
+}
 </style>
 </head>
 <body>
@@ -150,13 +269,13 @@ main { margin-left: 57px; padding: 7px; }
 <div id="toolbar">
   <div class="toolbar-section">
     <button id="searchBtn"><i class="fas fa-search"></i><span class="tooltip">Search</span></button>
-    <input type="text" id="searchInput" placeholder="Search...">
+    <input type="text" id="searchInput" placeholder="Search…" />
 
-    <button id="filterBtn"><i class="fas fa-tags"></i><span class="tooltip">Tags Filtering</span></button>
+    <button id="filterBtn"><i class="fas fa-tags"></i><span class="tooltip">Filter by tags</span></button>
     <div id="tagFilter"></div>
 
     <button id="colsBtn"><i class="fas fa-columns"></i><span class="tooltip">Columns</span></button>
-    <input type="number" id="colsInput" value="5" min="1" max="6">
+    <input type="number" id="colsInput" value="5" min="1" max="420" />
 
     <span class="spacer"></span>
   </div>
@@ -164,9 +283,9 @@ main { margin-left: 57px; padding: 7px; }
   <div class="toolbar-section">
     <a href="#" title="Discord"><i class="fab fa-discord"></i><span class="tooltip">@oSzoukaua</span></a>
     <span class="dash-spacer"></span>
-    <a href="https://ko-fi.com/oszoukaua" title="Ko-Fi"><i class="fas fa-heart"></i><span class="tooltip">Support me over at Ko-Fi!</span></a>
+    <a href="https://ko-fi.com/oszoukaua" title="Ko-Fi"><i class="fas fa-heart"></i><span class="tooltip">Support on Ko-Fi</span></a>
     <span class="dash-spacer"></span>
-    <a href="https://linktr.ee/oSzoukaua" title="Linktree"><i class="fas fa-link"></i><span class="tooltip">LinkTree</span></a>
+    <a href="https://linktr.ee/oSzoukaua" title="Linktree"><i class="fas fa-link"></i><span class="tooltip">Linktree</span></a>
   </div>
 
   <div class="toolbar-section">
@@ -176,44 +295,40 @@ main { margin-left: 57px; padding: 7px; }
 
 <main>
   <div class="grid" id="projectsGrid"></div>
+  <div id="scrollSentinel"></div>
 </main>
 
 <script>
-const projectsGrid = document.getElementById('projectsGrid');
-const searchBtn = document.getElementById('searchBtn');
-const filterBtn = document.getElementById('filterBtn');
-const colsBtn = document.getElementById('colsBtn');
-const searchInput = document.getElementById('searchInput');
-const colsInput = document.getElementById('colsInput');
-const tagFilter = document.getElementById('tagFilter');
+const projectsGrid = document.getElementById("projectsGrid");
+const searchBtn = document.getElementById("searchBtn");
+const filterBtn = document.getElementById("filterBtn");
+const colsBtn = document.getElementById("colsBtn");
+const searchInput = document.getElementById("searchInput");
+const colsInput = document.getElementById("colsInput");
+const tagFilter = document.getElementById("tagFilter");
 
 let currentCols = 5;
-let searchTerm = '';
+let searchTerm = "";
 let page = 0;
 const pageSize = 10;
 
-// ===== New tag structure =====
 const tagLibrary = {
-  "3D asset": [
+  "3D Asset": [
     { name: "character", color: "#8C00FF" },
-	{ name: "character", color: "#8C00FF" },
-	{ name: "object", color: "#A7B9D6" },
-	{ name: "background", color: "#60D67B" },
-	{ name: "misc", color: "#FFC900" },
-    { name: "apperal", color: "#825CD6" }
+    { name: "object", color: "#A7B9D6" },
+    { name: "background", color: "#60D67B" },
+    { name: "misc", color: "#FFC900" },
+    { name: "apparel", color: "#825CD6" }
   ],
   "Project Status": [
     { name: "unfinished", color: "#D84E4B" }
-  ],
-  "Frog": [
-    { name: "frog", color: "#008E00" }
   ],
   "Media": [
     { name: "art", color: "#00C689" }
   ],
   "Platform": [
     { name: "vrchat", color: "#00C4FF" },
-	{ name: "blender", color: "#FF6E00" }
+    { name: "blender", color: "#FF6E00" }
   ]
 };
 
@@ -244,138 +359,151 @@ const projects = [
   { title: "VRChat Custom Fallback Avatar", description: "Vrchat avatar, designed to act as a fallback avatar", tags: ["vrchat","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/fd79fca7-69ef-4f84-9418-297f2c6c93a9_111.png", link: "https://ko-fi.com/s/1011f20501" }
 ];
 
-let projectData = [...projects];
-let tagState = {}; 
+let tagState = {};
 
-// ===== Render tag tree =====
-Object.keys(tagLibrary).forEach(main=>{
-  const container = document.createElement('div');
-  container.className='tag-main';
-  container.innerHTML=`
+Object.keys(tagLibrary).forEach(main => {
+  const container = document.createElement("div");
+  container.className = "tag-main";
+  container.innerHTML = `
     <div class="tag-header">
-      <span class="label">${main}</span>
+      <span>${main}</span>
       <span class="toggle">+</span>
     </div>
   `;
-  const subContainer = document.createElement('div');
-  subContainer.style.display='none';
-  subContainer.style.flexDirection='column';
+
+  const subContainer = document.createElement("div");
+  subContainer.style.display = "none";
   container.appendChild(subContainer);
   tagFilter.appendChild(container);
 
-  container.querySelector('.tag-header').addEventListener('click', ()=>{
-    const toggle = container.querySelector('.toggle');
-    if(subContainer.style.display==='none'){ subContainer.style.display='flex'; toggle.textContent='-'; } 
-    else { subContainer.style.display='none'; toggle.textContent='+'; }
+  container.querySelector(".tag-header").addEventListener("click", () => {
+    const toggle = container.querySelector(".toggle");
+    const open = subContainer.style.display === "none";
+    subContainer.style.display = open ? "block" : "none";
+    toggle.textContent = open ? "-" : "+";
   });
 
-  tagLibrary[main].forEach(tag=>{
-    const span = document.createElement('div');
-    span.className='tag-sub';
-    span.innerHTML=`
+  tagLibrary[main].forEach(tag => {
+    const row = document.createElement("div");
+    row.className = "tag-sub";
+    row.innerHTML = `
       <span class="label" style="color:${tag.color}">${tag.name}</span>
       <span class="status">
         <span class="wh">W</span>/<span class="bl">B</span>
       </span>
     `;
 
-    // whitelist toggle
-    span.querySelector('.status .wh').addEventListener('click', ()=>{
-      if(tagState[tag.name]==='whitelist') delete tagState[tag.name]; 
-      else tagState[tag.name]='whitelist';
-      updateTagStatus(span, tag.name);
+    row.querySelector(".wh").addEventListener("click", () => {
+      tagState[tag.name] = tagState[tag.name] === "whitelist" ? null : "whitelist";
+      updateTagStatus(row, tag.name);
       renderProjects(true);
     });
 
-    // blacklist toggle
-    span.querySelector('.status .bl').addEventListener('click', ()=>{
-      if(tagState[tag.name]==='blacklist') delete tagState[tag.name]; 
-      else tagState[tag.name]='blacklist';
-      updateTagStatus(span, tag.name);
+    row.querySelector(".bl").addEventListener("click", () => {
+      tagState[tag.name] = tagState[tag.name] === "blacklist" ? null : "blacklist";
+      updateTagStatus(row, tag.name);
       renderProjects(true);
     });
 
-    subContainer.appendChild(span);
-    span.dataset.tagKey = tag.name;
+    subContainer.appendChild(row);
   });
 });
 
-// update single sub-tag
-function updateTagStatus(span, tag){
-  const wh = span.querySelector('.status .wh');
-  const bl = span.querySelector('.status .bl');
-  wh.style.color = tagState[tag]==='whitelist' ? '#6cf2c2' : 'inherit';
-  bl.style.color = tagState[tag]==='blacklist' ? '#f26c6c' : 'inherit';
+function updateTagStatus(row, tag) {
+  const wh = row.querySelector(".wh");
+  const bl = row.querySelector(".bl");
+  wh.style.color = tagState[tag] === "whitelist" ? "var(--accent)" : "inherit";
+  bl.style.color = tagState[tag] === "blacklist" ? "var(--danger)" : "inherit";
 }
 
-// ===== Filtered projects =====
 function getFilteredProjects() {
-  return projectData.filter(p=>{
-    if(searchTerm && !p.title.toLowerCase().includes(searchTerm.toLowerCase())) return false;
-    for(const [tag,status] of Object.entries(tagState)){
-      if(status==='whitelist' && !p.tags.includes(tag)) return false;
-      if(status==='blacklist' && p.tags.includes(tag)) return false;
+  return projects.filter(p => {
+    if (searchTerm && !p.title.toLowerCase().includes(searchTerm.toLowerCase())) return false;
+    for (const [tag, status] of Object.entries(tagState)) {
+      if (status === "whitelist" && !p.tags.includes(tag)) return false;
+      if (status === "blacklist" && p.tags.includes(tag)) return false;
     }
     return true;
   });
 }
 
-// ===== Render projects =====
-function renderProjects(reset=false){
-  if(reset){ projectsGrid.innerHTML=''; page=0; }
+function renderProjects(reset = false) {
+  if (reset) {
+    projectsGrid.innerHTML = "";
+    page = 0;
+  }
+
   const filtered = getFilteredProjects();
-  const start = page*pageSize;
-  const end = start+pageSize;
-  if(start >= filtered.length) return;
+  const start = page * pageSize;
+  const end = start + pageSize;
+  if (start >= filtered.length) return;
 
-  projectsGrid.style.gridTemplateColumns=`repeat(${currentCols},1fr)`;
+  projectsGrid.style.gridTemplateColumns = `repeat(${currentCols}, 1fr)`;
 
-  filtered.slice(start,end).forEach(p=>{
-    const card = document.createElement('div');
-    card.className='card';
-    card.addEventListener('click', ()=>{ window.open(p.link,'_blank'); }); // clickable card
+  filtered.slice(start, end).forEach(p => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.onclick = () => window.open(p.link, "_blank");
 
-    let tagHtml = '';
-    p.tags.forEach(tagKey=>{
-      for(const main in tagLibrary){
-        const t = tagLibrary[main].find(t=>t.name===tagKey);
-        if(!t) continue;
+    let tagHtml = "";
+    p.tags.forEach(tagKey => {
+      for (const group in tagLibrary) {
+        const t = tagLibrary[group].find(t => t.name === tagKey);
+        if (!t) continue;
         tagHtml += `<span class="tag-sub-card" style="border-color:${t.color}; background: color-mix(in srgb, ${t.color} 20%, black 80%)">${tagKey}</span>`;
       }
     });
 
-    card.innerHTML=`
+    card.innerHTML = `
       <div class="thumb"><img src="${p.image}" alt="${p.title}"></div>
       <div class="card-content">
-        <div class="tag-container">${tagHtml}</div>
+        <div>${tagHtml}</div>
         <div class="title">${p.title}</div>
         <p class="desc">${p.description}</p>
       </div>
     `;
+
     projectsGrid.appendChild(card);
-    requestAnimationFrame(()=>card.classList.add('visible'));
+    requestAnimationFrame(() => card.classList.add("visible"));
   });
 
   page++;
-  if(document.documentElement.scrollHeight <= window.innerHeight && start + pageSize < filtered.length) renderProjects();
 }
 
-// ===== Infinite scroll =====
-window.addEventListener('scroll',()=>{
-  if(window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 10) renderProjects();
+function togglePanel(panel, button) {
+  const open = window.getComputedStyle(panel).display === "block";
+
+  [searchInput, tagFilter, colsInput].forEach(p => p.style.display = "none");
+  [searchBtn, filterBtn, colsBtn].forEach(b => b.classList.remove("active"));
+
+  if (!open) {
+    panel.style.display = "block";
+    button.classList.add("active");
+  }
+}
+
+searchBtn.onclick = () => { togglePanel(searchInput, searchBtn); searchInput.focus(); };
+filterBtn.onclick = () => togglePanel(tagFilter, filterBtn);
+colsBtn.onclick = () => { togglePanel(colsInput, colsBtn); colsInput.focus(); };
+
+searchInput.oninput = () => { searchTerm = searchInput.value; renderProjects(true); };
+colsInput.oninput = () => { currentCols = parseInt(colsInput.value) || 5; renderProjects(true); };
+
+renderProjects();
+
+const sentinel = document.getElementById("scrollSentinel");
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      renderProjects();
+    }
+  });
+}, {
+  rootMargin: "200px", // trigger before reaching bottom
 });
 
-// ===== Toolbar toggles =====
-searchBtn.addEventListener('click',()=>{ searchInput.style.display = searchInput.style.display==='block'?'none':'block'; searchInput.focus(); });
-filterBtn.addEventListener('click',()=>{ tagFilter.style.display = tagFilter.style.display==='block'?'none':'block'; });
-colsBtn.addEventListener('click',()=>{ colsInput.style.display = colsInput.style.display==='block'?'none':'block'; colsInput.focus(); });
-
-// ===== Inputs =====
-searchInput.addEventListener('input',()=>{ searchTerm=searchInput.value; renderProjects(true); });
-colsInput.addEventListener('input',()=>{ currentCols=parseInt(colsInput.value)||5; renderProjects(true); });
-
-// ===== Initial render =====
-renderProjects();
+observer.observe(sentinel);
 </script>
 </body>
 </html>
