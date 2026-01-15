@@ -1,267 +1,381 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="icon" type="image/x-icon" href="webhub_favicon.ico"/>
-<title>oSzoukaua's: Webhub</title>
+<title>oSzoukaua's: Work</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 <style>
-  body {
-    margin: 0;
-    background-color: black;
-    font-family: monospace;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
-  }
+:root {
+  --bg: #0A0C0A;
+  --card: #121412;
+  --text: #e8eaf0;
+  --muted: #9aa3b2;
+  --radius: 6px;
+}
 
-  .grid {
-    display: grid;
-    gap: 6px;
-    box-sizing: border-box;
-  }
+/* ===== Global ===== */
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+body { background: var(--bg); color: var(--text); line-height: 1.5; }
 
-  .cell {
-    border: 1px dotted #333;
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    overflow: hidden;
-    box-sizing: border-box;
-  }
+/* ===== Toolbar ===== */
+#toolbar {
+  position: fixed;
+  left: 0; top: 0;
+  width: 56px; height: 100vh;
+  background: linear-gradient(to bottom, #2D302E, #0A0C0A);
+  display: flex; flex-direction: column;
+  padding: 4px 4px; gap: 10px; z-index: 1000;
+  border-radius: 8px;
+}
 
-  .cell a {
-    color: #4ea3ff;
-    text-decoration: underline;
-    font-weight: bold;
-    margin-bottom: 5px;
-    display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+.toolbar-section {
+  display: flex; flex-direction: column;
+  align-items: center;
+  background: linear-gradient(to bottom, #282D28, #121412);
+  border: 2px #353836 solid;
+  border-radius: 8px;
+  position: relative; 
+}
 
-  .filler {
-    flex: 1;
-    font-size: 14px;
-    line-height: 1.2;
-    color: #555;
-    overflow-wrap: break-word;
-  }
+.toolbar-section a, .toolbar-section button {
+  display: flex; justify-content: center; align-items: center;
+  width: 48px; height: 48px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #DCE2DC; font-size: 20px;
+  background: none; border: none; cursor: pointer;
+  position: relative;
+}
 
-  @keyframes flicker {
-    0%, 49%, 51%, 100% { opacity: 1; }
-    50% { opacity: 0.6; }
-  }
+.toolbar-section a:hover, .toolbar-section button:hover { color: #6cf2c2; }
+.toolbar-section a .tooltip, .toolbar-section button .tooltip {
+  position: absolute; left: 60px; top: 50%; transform: translateY(-50%);
+  background: #151922; padding: 4px 8px; border-radius: 4px;
+  font-size: 12px; white-space: nowrap; opacity: 0; pointer-events: none;
+}
+.toolbar-section a:hover .tooltip, .toolbar-section button:hover .tooltip { opacity: 1; }
 
-  .flicker-text {
-    animation: flicker 8s infinite;
-  }
+.spacer { width: 48px; height: 48px; }
+.dash-spacer { width: 36px; height: 3px; background: rgba(255,255,255,0.15); border-radius: 2px; margin: 4px 0; }
+
+/* Inputs */
+.toolbar-section input,
+.toolbar-section select,
+#tagFilter { display: none; position: absolute; left: 56px; z-index: 10; }
+
+/* ===== Tag tree ===== */
+#tagFilter {
+  background: #121412;
+  border: 1px solid #374151;
+  border-radius: 4px;
+  overflow-y: auto;
+  padding: 4px;
+  font-size: 12px;
+  color: var(--text);
+  width: 250px;
+}
+
+.tag-main {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  margin: 4px 0;
+  gap: 2px;
+}
+
+.tag-main .toggle {
+  font-size: 12px;
+  opacity: 0.7;
+}
+.tag-main .toggle:hover { opacity: 1; }
+
+.tag-main span { user-select: none; }
+.tag-sub { display: flex; gap: 4px; margin: 2px 0; flex-direction: row; }
+.tag-sub span.label { flex-grow: 1; cursor: pointer; }
+.tag-sub span.status { cursor: default; font-weight: bold; user-select: none; display: flex; gap:2px; }
+.tag-sub span.status span { cursor: pointer; padding: 0 2px; }
+
+.tag-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+.tag-header:hover { background: rgba(255,255,255,0.05); }
+
+#tagFilter::-webkit-scrollbar { width: 6px; }
+#tagFilter::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
+
+/* ===== Main ===== */
+main { margin-left: 57px; padding: 7px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5,1fr);
+  gap: 0.5rem;
+}
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid #1f2531;
+  transition: border-color 0.1s ease, transform 0.1s ease, opacity 0.1s ease;
+  cursor: pointer;
+}
+.card.visible { opacity: 1; }
+.card:hover { border-color: #2a3242; transform: translateY(-2px); }
+
+.thumb {
+  height: 256px; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #282D28, #121412);
+}
+.thumb img { width:100%; height:100%; object-fit:cover; }
+
+.card-content { padding: 0.4rem; }
+.tag-sub-card { display:inline-block; font-size:0.6rem; color:#fff; border: 1px solid #fff; margin-right: 3px; padding: 0px 4px; border-radius: 4px; margin-bottom:2px; }
+.tag-sub-card:hover { filter: brightness(1.2); cursor: help; }
+.title { font-size:0.95rem; font-weight:500; margin-bottom:0.2rem; }
+.desc { font-size:0.8rem; color: #C3DBD0; }
+
 </style>
 </head>
 <body>
-<div class="grid" id="grid"></div>
+
+<div id="toolbar">
+  <div class="toolbar-section">
+    <button id="searchBtn"><i class="fas fa-search"></i><span class="tooltip">Search</span></button>
+    <input type="text" id="searchInput" placeholder="Search...">
+
+    <button id="filterBtn"><i class="fas fa-tags"></i><span class="tooltip">Tags Filtering</span></button>
+    <div id="tagFilter"></div>
+
+    <button id="colsBtn"><i class="fas fa-columns"></i><span class="tooltip">Columns</span></button>
+    <input type="number" id="colsInput" value="5" min="1" max="6">
+
+    <span class="spacer"></span>
+  </div>
+
+  <div class="toolbar-section">
+    <a href="#" title="Discord"><i class="fab fa-discord"></i><span class="tooltip">@oSzoukaua</span></a>
+    <span class="dash-spacer"></span>
+    <a href="https://ko-fi.com/oszoukaua" title="Ko-Fi"><i class="fas fa-heart"></i><span class="tooltip">Support me over at Ko-Fi!</span></a>
+    <span class="dash-spacer"></span>
+    <a href="https://linktr.ee/oSzoukaua" title="Linktree"><i class="fas fa-link"></i><span class="tooltip">LinkTree</span></a>
+  </div>
+
+  <div class="toolbar-section">
+    <button title="MOTD"><span class="star">*</span><span class="tooltip">Grab Donald trump by the pussy an' call him a fascist! Cuz' we're gettin' fucked!</span></button>
+  </div>
+</div>
+
+<main>
+  <div class="grid" id="projectsGrid"></div>
+</main>
 
 <script>
-const grid = document.getElementById('grid');
+const projectsGrid = document.getElementById('projectsGrid');
+const searchBtn = document.getElementById('searchBtn');
+const filterBtn = document.getElementById('filterBtn');
+const colsBtn = document.getElementById('colsBtn');
+const searchInput = document.getElementById('searchInput');
+const colsInput = document.getElementById('colsInput');
+const tagFilter = document.getElementById('tagFilter');
 
-const links = [
-  { label: "www.ko-fi.com/oszoukaua", url: "https://ko-fi.com/oszoukaua", filler: "Support my work on Ko-fi." },
-  { label: "www.bsky.app/profile/oszoukaua.bsky.social", url: "https://bsky.app/profile/oszoukaua.bsky.social", filler: "Occasional posts on Blue Sky." },
-  { label: "www.pinterest.com/oSzoukaua", url: "https://pinterest.com/oSzoukaua", filler: "View my creations on Pinterest." },
-  { label: "www.twitch.tv/oszoukaua", url: "https://twitch.tv/oszoukaua", filler: "Watch my live streams on Twitch." },
-  { label: "www.oszoukaua.github.io/tate/tate.html", url: "tate/tate.html", filler: "All your timely needs" },
-  { label: "www.bsky.app/profile/oszuoptics.bsky.social", url: "https://bsky.app/profile/oszuoptics.bsky.social", filler: "Photography posts and adventures." }
+let currentCols = 5;
+let searchTerm = '';
+let page = 0;
+const pageSize = 10;
+
+// ===== New tag structure =====
+const tagLibrary = {
+  "3D asset": [
+    { name: "character", color: "#8C00FF" },
+	{ name: "character", color: "#8C00FF" },
+	{ name: "object", color: "#A7B9D6" },
+	{ name: "background", color: "#60D67B" },
+	{ name: "misc", color: "#FFC900" },
+    { name: "apperal", color: "#825CD6" }
+  ],
+  "Project Status": [
+    { name: "unfinished", color: "#D84E4B" }
+  ],
+  "Frog": [
+    { name: "frog", color: "#008E00" }
+  ],
+  "Media": [
+    { name: "art", color: "#00C689" }
+  ],
+  "Platform": [
+    { name: "vrchat", color: "#00C4FF" },
+	{ name: "blender", color: "#FF6E00" }
+  ]
+};
+
+const projects = [
+  { title: "Gonca", description: "Gonca 3D character model i made", tags: ["character","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/c637c21f-58b3-464c-8c21-9877d73dd257_cover_image.png", link: "https://ko-fi.com/s/cd86882ffa" },
+  { title: "TestBot [ V-1.0 ]", description: "Character 3D model i made", tags: ["character","blender","unfinished"], image: "https://storage.ko-fi.com/cdn/useruploads/display/b450b834-2c61-4c84-b2c5-ada619e04145_8.png", link: "https://ko-fi.com/s/763d2d7086" },
+  { title: "Bunto", description: "Character 3D model i made", tags: ["character","blender","unfinished"], image: "https://storage.ko-fi.com/cdn/useruploads/display/6ba431c7-f220-4b58-ad00-fcdb46805e98_viewangle.png", link: "https://ko-fi.com/s/66893d8e5d" },
+  { title: "Aeret [R-1.0]", description: "Character 3D model i made", tags: ["character","blender","unfinished"], image: "https://storage.ko-fi.com/cdn/useruploads/display/ea0714f2-eaec-4013-ade1-44a851508686_0.png", link: "https://ko-fi.com/s/8fad5560fa" },
+  { title: "Devision8 Revision", description: "Character 3D model i made", tags: ["character","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/35cb7737-2b78-4d2c-962c-5a0f2362abd4_devision8revision1frontview.png", link: "https://ko-fi.com/s/0cc2906ee0" },
+  { title: "AnnosRevision1", description: "Character 3D model i made", tags: ["character","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/728aced5-f682-48cc-9048-43e29f8c6532_viewangle.png", link: "https://ko-fi.com/s/7b83e80dec" },
+  { title: "UnknownSource", description: "Character 3D model i made", tags: ["character","blender","unfinished"], image: "https://storage.ko-fi.com/cdn/useruploads/display/59b73c70-4864-4d1e-9bc1-7f946ef0e962_referancephoto0.png", link: "https://ko-fi.com/s/5629c95283" },
+  { title: "Toon Hats", description: "Some toon hat models i made", tags: ["apperal","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/9bb1a87d-fa57-4a8b-8ace-19af2bdb569e_toonhatsiso.png", link: "https://ko-fi.com/s/3819e6eae1" },
+  { title: "Broken Heart", description: "Broken heart 3D model i made", tags: ["object","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/99f70067-7a8a-49fc-a51c-c0f0030c7715_viewangle1.png", link: "https://ko-fi.com/s/046a064af3" },
+  { title: "Cracked glasses", description: "Cracked glasses 3D model i made", tags: ["object","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/eb892223-1ae6-4398-9f24-9d4c4f1b3877_viewangle.png", link: "https://ko-fi.com/s/21cd6abb04" },
+  { title: "F r o g L o a f", description: "frog", tags: ["character","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/70bb93f4-a3e3-45e6-abda-4cc9dd96ea27_frogloaf.png", link: "https://ko-fi.com/s/c9eb7050a0" },
+  { title: "Artsy landscape Scene", description: "Layered toon style landscape background", tags: ["background","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/bdc08558-a570-4ea2-b8f7-e7577d0046e4_view2.png", link: "https://ko-fi.com/s/f63837e074" },
+  { title: "Comfy Bed", description: "Comfy Bed 3D model i made", tags: ["object","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/ac28c7c3-6b0a-4c41-b7d0-3d52f19b2504_viewangle4.png", link: "https://ko-fi.com/s/977bfa2fc7" },
+  { title: "Gender Symbols", description: "3 different gender icons", tags: ["misc","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/f2675b06-fe23-4041-91bc-0dd7b01d377d_viewangle.png", link: "https://ko-fi.com/s/6b4d1dc8a1" },
+  { title: "Cute Water bottle!", description: "bobbl", tags: ["object","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/1749ce93-864c-4d50-831e-87d99eb21fe0_bottleyfurmaw.png", link: "https://ko-fi.com/s/7f1d7b01a8" },
+  { title: "Check Box", description: "Checkbox models i made", tags: ["misc","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/9f3e8a8a-e21a-443f-a877-62a3b5c71385_viewangleall.png", link: "https://ko-fi.com/s/2eb3974c87" },
+  { title: "Low Poly Helmet", description: "Helmet 3D model i made", tags: ["object","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/9137231b-efe0-4652-8294-269c14995b20_viewangle2.png", link: "https://ko-fi.com/s/c61cb84889" },
+  { title: "Sign Frame", description: "Frame 3D model i made", tags: ["object","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/fc3ae167-3b07-47a3-9617-d72fc901407d_viewangle.png", link: "https://ko-fi.com/s/840393537c" },
+  { title: "Concrete Bench", description: "Bench 3D model i made", tags: ["object","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/b95ec318-331d-4a22-a0a1-ee33dc54a3ca_viewangle.png", link: "https://ko-fi.com/s/e200867f62" },
+  { title: "Robo", description: "Character 3D model i made", tags: ["character","blender","unfinished"], image: "https://storage.ko-fi.com/cdn/useruploads/display/d55a7f6d-edcb-4ffa-88b3-097a0e063233_viewangle.png", link: "https://ko-fi.com/s/c951cb4131" },
+  { title: "CarbonCop", description: "Shitty Character 3D model i made", tags: ["character","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/840a20e0-5185-43bb-ba44-0103996de0ef_angleview.png", link: "https://ko-fi.com/s/2e4bbc254b" },
+  { title: "Fromg", description: "fog", tags: ["frog","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/93cdea89-2fa2-400a-9908-121633536ac9_3.png", link: "https://ko-fi.com/s/ba426af48a" },
+  { title: "49 Phone Wallpapers", description: "Vertical style device wallpapers/art", tags: ["art","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/a286e898-2d1a-4945-9335-8f400e558bbd_blank4gridscollage_1.png", link: "https://ko-fi.com/s/74d4987b41" },
+  { title: "VRChat Custom Fallback Avatar", description: "Vrchat avatar, designed to act as a fallback avatar", tags: ["vrchat","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/fd79fca7-69ef-4f84-9418-297f2c6c93a9_111.png", link: "https://ko-fi.com/s/1011f20501" }
 ];
 
-const fillerDefaults = [
-"Network timeout occurred while fetching data.",
-"Insufficient permissions to access resource.",
-"Corrupted memory block detected during read operation.",
-"Unexpected packet loss prevented complete retrieval.",
-"Service unavailable due to maintenance window.",
-"Checksum mismatch, data integrity cannot be verified.",
-"Dependency failure in auxiliary module.",
-"Rate limit exceeded, retry later.",
-"Disk read error, unable to access storage sector.",
-"Resource temporarily locked by another process.",
-"Invalid configuration detected on startup.",
-"Authentication token expired, re-login required.",
-"Failed to resolve DNS hostname.",
-"Connection refused by remote host.",
-"Buffer overflow detected, operation aborted.",
-"File not found in specified directory.",
-"Unsupported file format encountered.",
-"Failed to allocate sufficient memory.",
-"Operation aborted due to user interrupt.",
-"Protocol mismatch detected during handshake.",
-"Hardware fault detected on controller unit.",
-"Data serialization error occurred.",
-"Unknown error code received from server.",
-"Timeout waiting for response from database.",
-"Insufficient storage space available.",
-"Permission denied writing to configuration file.",
-"Invalid parameter passed to function.",
-"Service crashed unexpectedly, restart required.",
-"SSL/TLS handshake failed.",
-"Malformed request received, cannot process.",
-"Dependency version conflict detected.",
-"Temporary network glitch, retrying operation.",
-"CPU usage exceeded safe threshold.",
-"Thread deadlock detected, operation cannot continue.",
-"Unexpected end of file encountered.",
-"Memory leak detected during operation.",
-"Resource quota exceeded for current session.",
-"Failed to acquire semaphore lock.",
-"Invalid session ID provided.",
-"File system read-only, cannot write.",
-"Operation failed due to transient error.",
-"Connection reset by peer.",
-"Hardware sensor returned out-of-range value.",
-"Error parsing configuration file.",
-"Database transaction rolled back due to conflict.",
-"Missing required environment variable.",
-"Encryption key not found for requested operation.",
-"Invalid command syntax.",
-"Packet fragmentation detected, cannot reassemble.",
-"Cache corruption detected, clearing cache.",
-"Authentication failed due to invalid credentials.",
-"Service dependency unavailable.",
-"Unsupported operation for current platform.",
-"Operation aborted due to timeout.",
-"Insufficient privileges to execute command.",
-"Checksum verification failed.",
-"Cannot open device, already in use.",
-"Failed to initialize subsystem.",
-"Unexpected response from API endpoint.",
-"Resource allocation failed.",
-"Configuration value out of allowed range.",
-"Failed to mount volume.",
-"Error reading from input stream.",
-"Failed to connect to message broker.",
-"Operation not implemented.",
-"License validation failed.",
-"Failed to start background process.",
-"Invalid index specified.",
-"Corrupted log file detected.",
-"Resource leak detected, closing handles.",
-"Operation canceled by system.",
-"Failed to write to output stream.",
-"Version mismatch between modules.",
-"System clock out of sync.",
-"Unreachable network segment.",
-"Invalid checksum in received packet.",
-"Operation blocked by security policy.",
-"Dependency module not loaded.",
-"Insufficient bandwidth for operation.",
-"Failed to parse response payload.",
-"Unexpected exception thrown.",
-"Operation cannot proceed while locked.",
-"Configuration change rejected.",
-"Invalid file descriptor.",
-"Data truncation occurred during write.",
-"Failed to authenticate with service.",
-"Cannot resolve symbolic link.",
-"Operation would exceed quota.",
-"Temporary service outage detected.",
-"Error accessing registry key.",
-"Device not recognized.",
-"Network interface down.",
-"Invalid memory access attempt.",
-"Failed to synchronize with peer.",
-"Operation aborted due to corrupted state.",
-"Invalid URL format.",
-"Operation not allowed in current mode.",
-"Service returned unknown status code.",
-];
+let projectData = [...projects];
+let tagState = {}; 
 
-function buildGrid() {
-  grid.innerHTML = '';
+// ===== Render tag tree =====
+Object.keys(tagLibrary).forEach(main=>{
+  const container = document.createElement('div');
+  container.className='tag-main';
+  container.innerHTML=`
+    <div class="tag-header">
+      <span class="label">${main}</span>
+      <span class="toggle">+</span>
+    </div>
+  `;
+  const subContainer = document.createElement('div');
+  subContainer.style.display='none';
+  subContainer.style.flexDirection='column';
+  container.appendChild(subContainer);
+  tagFilter.appendChild(container);
 
-  const cellWidth = 240;
-  const cellHeightRatio = 2 / 3;
-  const gap = 6;
-  const minLinks = links.length;
-
-  let maxCols = Math.floor((window.innerWidth + gap) / (cellWidth + gap));
-  let maxRows = Math.floor((window.innerHeight + gap) / (cellWidth * cellHeightRatio + gap));
-
-  let innerCols = Math.max(1, maxCols - 2);
-  let innerRows = Math.max(1, maxRows - 2);
-
-  if (innerCols * innerRows < minLinks) {
-    innerCols = Math.ceil(Math.sqrt(minLinks));
-    innerRows = Math.ceil(minLinks / innerCols);
-    maxCols = innerCols + 2;
-    maxRows = innerRows + 2;
-  }
-
-  maxCols += 1;
-  maxRows += 1;
-
-  grid.style.gridTemplateColumns = `repeat(${maxCols}, ${cellWidth}px)`;
-  grid.style.gridAutoRows = `${cellWidth * cellHeightRatio}px`;
-  grid.style.width = `${maxCols * cellWidth + (maxCols - 1) * gap}px`;
-  grid.style.height = `${maxRows * cellWidth * cellHeightRatio + (maxRows - 1) * gap}px`;
-
-  const totalCells = maxCols * maxRows;
-  const cellsArray = Array(totalCells).fill(null);
-
-  const innerIndices = [];
-  for (let r = 1; r < maxRows - 1; r++) {
-    for (let c = 1; c < maxCols - 1; c++) {
-      innerIndices.push(r * maxCols + c);
-    }
-  }
-
-  links.forEach(link => {
-    let index;
-    do {
-      const randIdx = Math.floor(Math.random() * innerIndices.length);
-      index = innerIndices[randIdx];
-      innerIndices.splice(randIdx, 1);
-    } while (cellsArray[index] !== null);
-    cellsArray[index] = link;
+  container.querySelector('.tag-header').addEventListener('click', ()=>{
+    const toggle = container.querySelector('.toggle');
+    if(subContainer.style.display==='none'){ subContainer.style.display='flex'; toggle.textContent='-'; } 
+    else { subContainer.style.display='none'; toggle.textContent='+'; }
   });
 
-  cellsArray.forEach((entry, i) => {
-    const cell = document.createElement('div');
-    cell.className = 'cell';
+  tagLibrary[main].forEach(tag=>{
+    const span = document.createElement('div');
+    span.className='tag-sub';
+    span.innerHTML=`
+      <span class="label" style="color:${tag.color}">${tag.name}</span>
+      <span class="status">
+        <span class="wh">W</span>/<span class="bl">B</span>
+      </span>
+    `;
 
-    const linkEl = document.createElement('a');
-    linkEl.className = 'flicker-text';
-    if (entry) {
-      linkEl.textContent = entry.label;
-      linkEl.href = entry.url;
-    } else {
-      linkEl.textContent = `Failed to load entry ${i + 1}`;
-      linkEl.href = "#";
-      linkEl.style.color = '#888';
-      linkEl.style.textDecoration = 'none';
-    }
+    // whitelist toggle
+    span.querySelector('.status .wh').addEventListener('click', ()=>{
+      if(tagState[tag.name]==='whitelist') delete tagState[tag.name]; 
+      else tagState[tag.name]='whitelist';
+      updateTagStatus(span, tag.name);
+      renderProjects(true);
+    });
 
-    const filler = document.createElement('div');
-    filler.className = 'filler flicker-text';
-    filler.textContent = entry ? entry.filler : fillerDefaults[i % fillerDefaults.length];
+    // blacklist toggle
+    span.querySelector('.status .bl').addEventListener('click', ()=>{
+      if(tagState[tag.name]==='blacklist') delete tagState[tag.name]; 
+      else tagState[tag.name]='blacklist';
+      updateTagStatus(span, tag.name);
+      renderProjects(true);
+    });
 
-    cell.appendChild(linkEl);
-    cell.appendChild(filler);
-    grid.appendChild(cell);
+    subContainer.appendChild(span);
+    span.dataset.tagKey = tag.name;
   });
+});
 
-  document.querySelectorAll('.flicker-text').forEach(el => {
-    const delay = Math.random() * 200;
-    const duration = Math.random() * 20;
-    el.style.animationDelay = `${delay}s`;
-    el.style.animationDuration = `${duration}s`;
+// update single sub-tag
+function updateTagStatus(span, tag){
+  const wh = span.querySelector('.status .wh');
+  const bl = span.querySelector('.status .bl');
+  wh.style.color = tagState[tag]==='whitelist' ? '#6cf2c2' : 'inherit';
+  bl.style.color = tagState[tag]==='blacklist' ? '#f26c6c' : 'inherit';
+}
+
+// ===== Filtered projects =====
+function getFilteredProjects() {
+  return projectData.filter(p=>{
+    if(searchTerm && !p.title.toLowerCase().includes(searchTerm.toLowerCase())) return false;
+    for(const [tag,status] of Object.entries(tagState)){
+      if(status==='whitelist' && !p.tags.includes(tag)) return false;
+      if(status==='blacklist' && p.tags.includes(tag)) return false;
+    }
+    return true;
   });
 }
 
-window.addEventListener('resize', buildGrid);
-buildGrid();
+// ===== Render projects =====
+function renderProjects(reset=false){
+  if(reset){ projectsGrid.innerHTML=''; page=0; }
+  const filtered = getFilteredProjects();
+  const start = page*pageSize;
+  const end = start+pageSize;
+  if(start >= filtered.length) return;
+
+  projectsGrid.style.gridTemplateColumns=`repeat(${currentCols},1fr)`;
+
+  filtered.slice(start,end).forEach(p=>{
+    const card = document.createElement('div');
+    card.className='card';
+    card.addEventListener('click', ()=>{ window.open(p.link,'_blank'); }); // clickable card
+
+    let tagHtml = '';
+    p.tags.forEach(tagKey=>{
+      for(const main in tagLibrary){
+        const t = tagLibrary[main].find(t=>t.name===tagKey);
+        if(!t) continue;
+        tagHtml += `<span class="tag-sub-card" style="border-color:${t.color}; background: color-mix(in srgb, ${t.color} 20%, black 80%)">${tagKey}</span>`;
+      }
+    });
+
+    card.innerHTML=`
+      <div class="thumb"><img src="${p.image}" alt="${p.title}"></div>
+      <div class="card-content">
+        <div class="tag-container">${tagHtml}</div>
+        <div class="title">${p.title}</div>
+        <p class="desc">${p.description}</p>
+      </div>
+    `;
+    projectsGrid.appendChild(card);
+    requestAnimationFrame(()=>card.classList.add('visible'));
+  });
+
+  page++;
+  if(document.documentElement.scrollHeight <= window.innerHeight && start + pageSize < filtered.length) renderProjects();
+}
+
+// ===== Infinite scroll =====
+window.addEventListener('scroll',()=>{
+  if(window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 10) renderProjects();
+});
+
+// ===== Toolbar toggles =====
+searchBtn.addEventListener('click',()=>{ searchInput.style.display = searchInput.style.display==='block'?'none':'block'; searchInput.focus(); });
+filterBtn.addEventListener('click',()=>{ tagFilter.style.display = tagFilter.style.display==='block'?'none':'block'; });
+colsBtn.addEventListener('click',()=>{ colsInput.style.display = colsInput.style.display==='block'?'none':'block'; colsInput.focus(); });
+
+// ===== Inputs =====
+searchInput.addEventListener('input',()=>{ searchTerm=searchInput.value; renderProjects(true); });
+colsInput.addEventListener('input',()=>{ currentCols=parseInt(colsInput.value)||5; renderProjects(true); });
+
+// ===== Initial render =====
+renderProjects();
 </script>
 </body>
 </html>
