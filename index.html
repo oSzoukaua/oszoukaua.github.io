@@ -8,14 +8,28 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
 <style>
-:root {
-  --bg: #0a0c0a;
-  --card: #121412;
-  --text: #e8eaf0;
-  --muted: #9aa3b2;
+.forest-theme {
   --radius: 6px;
-  --accent: #6cf2c2;
-  --danger: #f26c6c;
+  --background_colour: #0a0c0a;
+  --card_background_colour: #121412;
+  --text_colour: #e8eaf0;
+  --high_accent_colour: #79AF9C;
+  --mid_accent_colour: #B7B7B7;
+  --low_accent_colour: #374151;
+  --primary_colour: #2d302e;
+  --secondary_colour: #0a0c0a;
+}
+
+.desert-theme {
+  --radius: 6px;
+  --background_colour: #0a0c0a;
+  --card_background_colour: #121412;
+  --text_colour: #ACA59A;
+  --high_accent_colour: #CCBCA7;
+  --mid_accent_colour: #969390;
+  --low_accent_colour: #5B5750;
+  --primary_colour: #383532;
+  --secondary_colour: #11100E;
 }
 
 * {
@@ -26,8 +40,8 @@
 }
 
 body {
-  background: var(--bg);
-  color: var(--text);
+  background: var(--background_colour);
+  color: var(--text_colour);
   line-height: 1.5;
 }
 
@@ -37,7 +51,7 @@ body {
   top: 0;
   width: 56px;
   height: 100vh;
-  background: linear-gradient(to bottom, #2d302e, #0a0c0a);
+  background: linear-gradient(to bottom, var(--primary_colour), var(--secondary_colour));
   display: flex;
   flex-direction: column;
   padding: 4px;
@@ -50,8 +64,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: linear-gradient(to bottom, #282d28, #121412);
-  border: 2px solid #353836;
+  background: linear-gradient(to bottom, var(--primary_colour), var(--secondary_colour));
+  border: 2px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
 }
 
@@ -64,7 +78,7 @@ body {
   height: 48px;
   border-radius: 6px;
   text-decoration: none;
-  color: #dce2dc;
+  color: var(--mid_accent_colour);
   font-size: 20px;
   background: none;
   border: none;
@@ -74,7 +88,7 @@ body {
 
 .toolbar-section a:hover,
 .toolbar-section button:hover {
-  color: var(--accent);
+  color: var(--high_accent_colour);
 }
 
 .toolbar-section a .tooltip,
@@ -83,7 +97,7 @@ body {
   left: 60px;
   top: 50%;
   transform: translateY(-50%);
-  background: #151922;
+  background: var(--background_colour);
   padding: 4px 8px;
   border-radius: 4px;
   font-size: 12px;
@@ -119,13 +133,13 @@ body {
 }
 
 #tagFilter {
-  background: #121412;
-  border: 1px solid #374151;
+  background: var(--background_colour);
+  border: 1px solid var(--low_accent_colour);
   border-radius: 4px;
   overflow-y: auto;
   padding: 4px;
   font-size: 12px;
-  color: var(--text);
+  color: var(--text_colour);
   width: 250px;
 }
 
@@ -195,10 +209,10 @@ main {
 }
 
 .card {
-  background: var(--card);
+  background: var(--card_background_colour);
   border-radius: var(--radius);
   overflow: hidden;
-  border: 1px solid #1f2531;
+  border: 1px solid var(--low_accent_colour);
   transition: border-color 0.1s ease, transform 0.1s ease, opacity 0.1s ease;
   cursor: pointer;
   opacity: 0;
@@ -209,7 +223,7 @@ main {
 }
 
 .card:hover {
-  border-color: #2a3242;
+  border-color: var(--high_accent_colour);
   transform: translateY(-2px);
 }
 
@@ -218,7 +232,6 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #282d28, #121412);
 }
 
 .thumb img {
@@ -255,16 +268,16 @@ main {
 
 .desc {
   font-size: 0.8rem;
-  color: #c3dbd0;
+  color: var(--text_colour);
 }
 
 .toolbar-section button.active {
-  color: var(--accent);
+  color: var(--high_accent_colour);
   box-shadow: inset 0 0 0 1px rgba(108, 242, 194, 0.4);
 }
 </style>
 </head>
-<body>
+<body class="forest-theme">
 
 <div id="toolbar">
   <div class="toolbar-section">
@@ -314,49 +327,102 @@ const pageSize = 10;
 
 const tagLibrary = {
   "3D Asset": [
-    { name: "character", color: "#8C00FF" },
-    { name: "object", color: "#A7B9D6" },
-    { name: "background", color: "#60D67B" },
-    { name: "misc", color: "#FFC900" },
-    { name: "apparel", color: "#825CD6" }
+    { name: "Character", color: "#8C00FF" },
+    { name: "Object", color: "#A7B9D6" },
+    { name: "Background", color: "#60D67B" },
+    { name: "Misc", color: "#FFC900" },
+    { name: "Apparel", color: "#825CD6" }
   ],
   "Project Status": [
-    { name: "unfinished", color: "#D84E4B" }
+    { name: "Unfinished", color: "#D84E4B" },
+	{ name: "Complete", color: "#00FF11" }
   ],
-  "Media": [
-    { name: "art", color: "#00C689" }
+  "2D Asset": [
+    { name: "Art", color: "#00C689" }
   ],
   "Platform": [
-    { name: "vrchat", color: "#00C4FF" },
-    { name: "blender", color: "#FF6E00" }
+    { name: "VRChat", color: "#00C4FF" },
+	{ name: "Pinterest", color: "#ff2b4b" },
+    { name: "Blender", color: "#FF6E00" }
+  ],
+  "Series": [
+    { name: "Stickers", color: "#FFBD77" },
+	{ name: "oEmoji", color: "#FFBD77" }
   ]
 };
 
 const projects = [
-  { title: "Gonca", description: "Gonca 3D character model i made", tags: ["character","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/c637c21f-58b3-464c-8c21-9877d73dd257_cover_image.png", link: "https://ko-fi.com/s/cd86882ffa" },
-  { title: "TestBot [ V-1.0 ]", description: "Character 3D model i made", tags: ["character","blender","unfinished"], image: "https://storage.ko-fi.com/cdn/useruploads/display/b450b834-2c61-4c84-b2c5-ada619e04145_8.png", link: "https://ko-fi.com/s/763d2d7086" },
-  { title: "Bunto", description: "Character 3D model i made", tags: ["character","blender","unfinished"], image: "https://storage.ko-fi.com/cdn/useruploads/display/6ba431c7-f220-4b58-ad00-fcdb46805e98_viewangle.png", link: "https://ko-fi.com/s/66893d8e5d" },
-  { title: "Aeret [R-1.0]", description: "Character 3D model i made", tags: ["character","blender","unfinished"], image: "https://storage.ko-fi.com/cdn/useruploads/display/ea0714f2-eaec-4013-ade1-44a851508686_0.png", link: "https://ko-fi.com/s/8fad5560fa" },
-  { title: "Devision8 Revision", description: "Character 3D model i made", tags: ["character","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/35cb7737-2b78-4d2c-962c-5a0f2362abd4_devision8revision1frontview.png", link: "https://ko-fi.com/s/0cc2906ee0" },
-  { title: "AnnosRevision1", description: "Character 3D model i made", tags: ["character","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/728aced5-f682-48cc-9048-43e29f8c6532_viewangle.png", link: "https://ko-fi.com/s/7b83e80dec" },
-  { title: "UnknownSource", description: "Character 3D model i made", tags: ["character","blender","unfinished"], image: "https://storage.ko-fi.com/cdn/useruploads/display/59b73c70-4864-4d1e-9bc1-7f946ef0e962_referancephoto0.png", link: "https://ko-fi.com/s/5629c95283" },
-  { title: "Toon Hats", description: "Some toon hat models i made", tags: ["apperal","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/9bb1a87d-fa57-4a8b-8ace-19af2bdb569e_toonhatsiso.png", link: "https://ko-fi.com/s/3819e6eae1" },
-  { title: "Broken Heart", description: "Broken heart 3D model i made", tags: ["object","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/99f70067-7a8a-49fc-a51c-c0f0030c7715_viewangle1.png", link: "https://ko-fi.com/s/046a064af3" },
-  { title: "Cracked glasses", description: "Cracked glasses 3D model i made", tags: ["object","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/eb892223-1ae6-4398-9f24-9d4c4f1b3877_viewangle.png", link: "https://ko-fi.com/s/21cd6abb04" },
-  { title: "F r o g L o a f", description: "frog", tags: ["character","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/70bb93f4-a3e3-45e6-abda-4cc9dd96ea27_frogloaf.png", link: "https://ko-fi.com/s/c9eb7050a0" },
-  { title: "Artsy landscape Scene", description: "Layered toon style landscape background", tags: ["background","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/bdc08558-a570-4ea2-b8f7-e7577d0046e4_view2.png", link: "https://ko-fi.com/s/f63837e074" },
-  { title: "Comfy Bed", description: "Comfy Bed 3D model i made", tags: ["object","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/ac28c7c3-6b0a-4c41-b7d0-3d52f19b2504_viewangle4.png", link: "https://ko-fi.com/s/977bfa2fc7" },
-  { title: "Gender Symbols", description: "3 different gender icons", tags: ["misc","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/f2675b06-fe23-4041-91bc-0dd7b01d377d_viewangle.png", link: "https://ko-fi.com/s/6b4d1dc8a1" },
-  { title: "Cute Water bottle!", description: "bobbl", tags: ["object","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/1749ce93-864c-4d50-831e-87d99eb21fe0_bottleyfurmaw.png", link: "https://ko-fi.com/s/7f1d7b01a8" },
-  { title: "Check Box", description: "Checkbox models i made", tags: ["misc","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/9f3e8a8a-e21a-443f-a877-62a3b5c71385_viewangleall.png", link: "https://ko-fi.com/s/2eb3974c87" },
-  { title: "Low Poly Helmet", description: "Helmet 3D model i made", tags: ["object","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/9137231b-efe0-4652-8294-269c14995b20_viewangle2.png", link: "https://ko-fi.com/s/c61cb84889" },
-  { title: "Sign Frame", description: "Frame 3D model i made", tags: ["object","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/fc3ae167-3b07-47a3-9617-d72fc901407d_viewangle.png", link: "https://ko-fi.com/s/840393537c" },
-  { title: "Concrete Bench", description: "Bench 3D model i made", tags: ["object","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/b95ec318-331d-4a22-a0a1-ee33dc54a3ca_viewangle.png", link: "https://ko-fi.com/s/e200867f62" },
-  { title: "Robo", description: "Character 3D model i made", tags: ["character","blender","unfinished"], image: "https://storage.ko-fi.com/cdn/useruploads/display/d55a7f6d-edcb-4ffa-88b3-097a0e063233_viewangle.png", link: "https://ko-fi.com/s/c951cb4131" },
-  { title: "CarbonCop", description: "Shitty Character 3D model i made", tags: ["character","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/840a20e0-5185-43bb-ba44-0103996de0ef_angleview.png", link: "https://ko-fi.com/s/2e4bbc254b" },
-  { title: "Fromg", description: "fog", tags: ["frog","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/93cdea89-2fa2-400a-9908-121633536ac9_3.png", link: "https://ko-fi.com/s/ba426af48a" },
-  { title: "49 Phone Wallpapers", description: "Vertical style device wallpapers/art", tags: ["art","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/a286e898-2d1a-4945-9335-8f400e558bbd_blank4gridscollage_1.png", link: "https://ko-fi.com/s/74d4987b41" },
-  { title: "VRChat Custom Fallback Avatar", description: "Vrchat avatar, designed to act as a fallback avatar", tags: ["vrchat","blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/fd79fca7-69ef-4f84-9418-297f2c6c93a9_111.png", link: "https://ko-fi.com/s/1011f20501" }
+  { title: "Gonca", description: "Gonca 3D character model i made", tags: ["Complete","Character","Blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/c637c21f-58b3-464c-8c21-9877d73dd257_cover_image.png", link: "https://ko-fi.com/s/cd86882ffa" },
+  { title: "TestBot [ V-1.0 ]", description: "Character 3D model i made", tags: ["Character","Blender","Unfinished"], image: "https://storage.ko-fi.com/cdn/useruploads/display/b450b834-2c61-4c84-b2c5-ada619e04145_8.png", link: "https://ko-fi.com/s/763d2d7086" },
+  { title: "Bunto", description: "Character 3D model i made", tags: ["Character","Blender","Unfinished"], image: "https://storage.ko-fi.com/cdn/useruploads/display/6ba431c7-f220-4b58-ad00-fcdb46805e98_viewangle.png", link: "https://ko-fi.com/s/66893d8e5d" },
+  { title: "Aeret [R-1.0]", description: "Character 3D model i made", tags: ["Complete","Character","Blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/ea0714f2-eaec-4013-ade1-44a851508686_0.png", link: "https://ko-fi.com/s/8fad5560fa" },
+  { title: "Devision8 Revision", description: "Character 3D model i made", tags: ["Complete","Character","Blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/35cb7737-2b78-4d2c-962c-5a0f2362abd4_devision8revision1frontview.png", link: "https://ko-fi.com/s/0cc2906ee0" },
+  { title: "AnnosRevision1", description: "Character 3D model i made", tags: ["Complete","Character","Blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/728aced5-f682-48cc-9048-43e29f8c6532_viewangle.png", link: "https://ko-fi.com/s/7b83e80dec" },
+  { title: "UnknownSource", description: "Character 3D model i made", tags: ["Character","Blender","Unfinished"], image: "https://storage.ko-fi.com/cdn/useruploads/display/59b73c70-4864-4d1e-9bc1-7f946ef0e962_referancephoto0.png", link: "https://ko-fi.com/s/5629c95283" },
+  { title: "Toon Hats", description: "Some toon hat models i made", tags: ["Complete","apperal","Blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/9bb1a87d-fa57-4a8b-8ace-19af2bdb569e_toonhatsiso.png", link: "https://ko-fi.com/s/3819e6eae1" },
+  { title: "Broken Heart", description: "Broken heart 3D model i made", tags: ["Complete","Object","Blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/99f70067-7a8a-49fc-a51c-c0f0030c7715_viewangle1.png", link: "https://ko-fi.com/s/046a064af3" },
+  { title: "Cracked glasses", description: "Cracked glasses 3D model i made", tags: ["Complete","Object","Blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/eb892223-1ae6-4398-9f24-9d4c4f1b3877_viewangle.png", link: "https://ko-fi.com/s/21cd6abb04" },
+  { title: "F r o g L o a f", description: "frog", tags: ["Complete","Character","Blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/70bb93f4-a3e3-45e6-abda-4cc9dd96ea27_frogloaf.png", link: "https://ko-fi.com/s/c9eb7050a0" },
+  { title: "Artsy landscape Scene", description: "Layered toon style landscape background", tags: ["Complete","Background","Blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/bdc08558-a570-4ea2-b8f7-e7577d0046e4_view2.png", link: "https://ko-fi.com/s/f63837e074" },
+  { title: "Comfy Bed", description: "Comfy Bed 3D model i made", tags: ["Complete","Object","Blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/ac28c7c3-6b0a-4c41-b7d0-3d52f19b2504_viewangle4.png", link: "https://ko-fi.com/s/977bfa2fc7" },
+  { title: "Gender Symbols", description: "3 different gender icons", tags: ["Complete","Misc","Blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/f2675b06-fe23-4041-91bc-0dd7b01d377d_viewangle.png", link: "https://ko-fi.com/s/6b4d1dc8a1" },
+  { title: "Cute Water bottle!", description: "bobbl", tags: ["Complete","Object","Blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/1749ce93-864c-4d50-831e-87d99eb21fe0_bottleyfurmaw.png", link: "https://ko-fi.com/s/7f1d7b01a8" },
+  { title: "Check Box", description: "Checkbox models i made", tags: ["Complete","Misc","Blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/9f3e8a8a-e21a-443f-a877-62a3b5c71385_viewangleall.png", link: "https://ko-fi.com/s/2eb3974c87" },
+  { title: "Low Poly Helmet", description: "Helmet 3D model i made", tags: ["Complete","Object","Blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/9137231b-efe0-4652-8294-269c14995b20_viewangle2.png", link: "https://ko-fi.com/s/c61cb84889" },
+  { title: "Sign Frame", description: "Frame 3D model i made", tags: ["Complete","Object","Blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/fc3ae167-3b07-47a3-9617-d72fc901407d_viewangle.png", link: "https://ko-fi.com/s/840393537c" },
+  { title: "Concrete Bench", description: "Bench 3D model i made", tags: ["Complete","Object","Blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/b95ec318-331d-4a22-a0a1-ee33dc54a3ca_viewangle.png", link: "https://ko-fi.com/s/e200867f62" },
+  { title: "Robo", description: "Character 3D model i made", tags: ["Complete","Character","Blender","Unfinished"], image: "https://storage.ko-fi.com/cdn/useruploads/display/d55a7f6d-edcb-4ffa-88b3-097a0e063233_viewangle.png", link: "https://ko-fi.com/s/c951cb4131" },
+  { title: "CarbonCop", description: "Shitty Character 3D model i made", tags: ["Complete","Character","Blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/840a20e0-5185-43bb-ba44-0103996de0ef_angleview.png", link: "https://ko-fi.com/s/2e4bbc254b" },
+  { title: "Fromg", description: "fog", tags: ["Complete","frog","Blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/93cdea89-2fa2-400a-9908-121633536ac9_3.png", link: "https://ko-fi.com/s/ba426af48a" },
+  { title: "49 Phone Wallpapers", description: "Vertical style device wallpapers/art", tags: ["Complete","Art","Blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/a286e898-2d1a-4945-9335-8f400e558bbd_blank4gridscollage_1.png", link: "https://ko-fi.com/s/74d4987b41" },
+  { title: "VRChat Custom Fallback Avatar", description: "Vrchat avatar, designed to act as a fallback avatar", tags: ["Complete","VRChat","Blender"], image: "https://storage.ko-fi.com/cdn/useruploads/display/fd79fca7-69ef-4f84-9418-297f2c6c93a9_111.png", link: "https://ko-fi.com/s/1011f20501" },
+  { title: "Chofi", description: "Guy chilling art", tags: ["Complete","Pinterest","Art"], image: "https://i.pinimg.com/736x/ae/c6/07/aec607c9755330575af1b2d6d2f82686.jpg", link: "https://uk.pinterest.com/pin/581597739420158389/" },
+  { title: "Goobie", description: "Guy skydiving art", tags: ["Complete","Pinterest","Art"], image: "https://i.pinimg.com/736x/14/79/4a/14794aeade63f9f960e474060591ea15.jpg", link: "https://uk.pinterest.com/pin/581597739420158383/" },
+  { title: "Some open designs I made!", description: "Character designs", tags: ["Complete","Pinterest","Art"], image: "https://i.pinimg.com/736x/05/2b/38/052b3801907896ef85e31d9ee91f7da6.jpg", link: "https://uk.pinterest.com/pin/581597739417240046/" },
+  { title: "Sticker 21 - An Egg!", description: "A sticker design", tags: ["Stickers","Pinterest","Art"], image: "https://i.pinimg.com/736x/30/c2/b0/30c2b0163a9027417ebac7419e9691ae.jpg", link: "https://uk.pinterest.com/pin/581597739417215148/" },
+  { title: "Sticker 20 - A Can of beans!", description: "A sticker design", tags: ["Stickers","Pinterest","Art"], image: "https://i.pinimg.com/736x/94/9d/e1/949de1bcb6f121d3c8be540920255529.jpg", link: "https://uk.pinterest.com/pin/581597739417215139/" },
+  { title: "Sticker 19 - A Flamingo!", description: "A sticker design", tags: ["Stickers","Pinterest","Art"], image: "https://i.pinimg.com/736x/4e/f7/fe/4ef7fef4463326e7dbeefde6bd0fcaff.jpg", link: "https://uk.pinterest.com/pin/581597739417215129/" },
+  { title: "Sticker 18 - A Pill bottle!", description: "A sticker design", tags: ["Stickers","Pinterest","Art"], image: "https://i.pinimg.com/736x/64/54/b1/6454b11c7d720012caa501402cbf52d9.jpg", link: "https://uk.pinterest.com/pin/581597739417215123/" },
+  { title: "Sticker 17 - A Stop sign!", description: "A sticker design", tags: ["Stickers","Pinterest","Art"], image: "https://i.pinimg.com/736x/45/3d/a7/453da7faebff1291f56747b1916f36c7.jpg", link: "https://uk.pinterest.com/pin/581597739417215118/" },
+  { title: "Sticker 16 - A Pillow!", description: "A sticker design", tags: ["Stickers","Pinterest","Art"], image: "https://i.pinimg.com/736x/f6/e9/70/f6e9707243ab2cd5546842c66f709983.jpg", link: "https://uk.pinterest.com/pin/581597739417215112/" },
+  { title: "Sticker 15 - A Box!", description: "A sticker design", tags: ["Stickers","Pinterest","Art"], image: "https://i.pinimg.com/736x/fa/56/3a/fa563ae5fd424c9cfff61129c69b8fd2.jpg", link: "https://uk.pinterest.com/pin/581597739417215103/" },
+  { title: "Sticker 14 - A Paperclip!", description: "A sticker design", tags: ["Stickers","Pinterest","Art"], image: "https://i.pinimg.com/736x/f3/51/05/f35105f4ace4b27a2447e47367512139.jpg", link: "https://uk.pinterest.com/pin/581597739417215100/" },
+  { title: "Sticker 13 - A Cheese wheel!", description: "A sticker design", tags: ["Stickers","Pinterest","Art"], image: "https://i.pinimg.com/736x/38/13/7d/38137d5602b63c23ce3f5a1ed850e9ff.jpg", link: "https://uk.pinterest.com/pin/581597739417215097/" },
+  { title: "Sticker 12 - A Traffic cone!", description: "A sticker design", tags: ["Stickers","Pinterest","Art"], image: "https://i.pinimg.com/736x/3a/e1/c7/3ae1c71311828fb504b94a3b66eecbd4.jpg", link: "https://uk.pinterest.com/pin/581597739417215095/" },
+  { title: "Sticker 11 - A Toaster!", description: "A sticker design", tags: ["Stickers","Pinterest","Art"], image: "https://i.pinimg.com/736x/f7/e2/20/f7e2202b7ddcfe25e6dfce46549c7f5c.jpg", link: "https://uk.pinterest.com/pin/581597739417215094/" },
+  { title: "Sticker 10 - A Cake!", description: "A sticker design", tags: ["Stickers","Pinterest","Art"], image: "https://i.pinimg.com/736x/29/3a/24/293a249891f4413b5504ea2a23cd9f7c.jpg", link: "https://uk.pinterest.com/pin/581597739417215090/" },
+  { title: "Sticker 9 - A Ball!", description: "A sticker design", tags: ["Stickers","Pinterest","Art"], image: "https://i.pinimg.com/736x/67/67/e3/6767e380a2eb92015136e7cb2fedc6c9.jpg", link: "https://uk.pinterest.com/pin/581597739417215077/" },
+  { title: "Sticker 8 - A Skull!", description: "A sticker design", tags: ["Stickers","Pinterest","Art"], image: "https://i.pinimg.com/736x/a5/2e/c5/a52ec534fbdc8fbfc093b4dbe5d84124.jpg", link: "https://uk.pinterest.com/pin/581597739416607954/" },
+  { title: "Sticker 7 - A Mouth!", description: "A sticker design", tags: ["Stickers","Pinterest","Art"], image: "https://i.pinimg.com/736x/4f/a6/14/4fa6140045b3408d0661b2333839a397.jpg", link: "https://uk.pinterest.com/pin/581597739416584825/" },
+  { title: "Sticker 6 - A Heart!", description: "A sticker design", tags: ["Stickers","Pinterest","Art"], image: "https://i.pinimg.com/736x/59/35/36/593536116d82a68cd78fc2c05bb66eca.jpg", link: "https://uk.pinterest.com/pin/581597739416565265/" },
+  { title: "Sticker 5 - Radiation Warning!", description: "A sticker design", tags: ["Stickers","Pinterest","Art"], image: "https://i.pinimg.com/736x/01/05/c0/0105c0cd05adad945b4e6dd4ed73b778.jpg", link: "https://uk.pinterest.com/pin/581597739416546803/" },
+  { title: "Sticker 4 - A Battery!", description: "A sticker design", tags: ["Stickers","Pinterest","Art"], image: "https://i.pinimg.com/736x/d2/73/31/d27331d04900a5afcebb333ef4ff20cc.jpg", link: "https://uk.pinterest.com/pin/581597739416526997/" },
+  { title: "Sticker 3 - A Watermelon!", description: "A sticker design", tags: ["Stickers","Pinterest","Art"], image: "https://i.pinimg.com/736x/d7/2f/69/d72f69736f894c4619e8a455fbfccb47.jpg", link: "https://uk.pinterest.com/pin/581597739416524132/" },
+  { title: "Sticker 2 - A Popsicle!", description: "A sticker design", tags: ["Stickers","Pinterest","Art"], image: "https://i.pinimg.com/736x/a1/a6/4d/a1a64d8863594e9346ae87144ef1ed70.jpg", link: "https://uk.pinterest.com/pin/581597739416524120/" },
+  { title: "Sticker 1 - A Paw!", description: "A sticker design", tags: ["Stickers","Pinterest","Art"], image: "https://i.pinimg.com/736x/15/b0/8c/15b08cefe69ab8dcd0dcd0336dd2675e.jpg", link: "https://uk.pinterest.com/pin/581597739416524111/" },
+  { title: "Sticker 0 - A frog!", description: "A sticker design", tags: ["Stickers","Pinterest","Art"], image: "https://i.pinimg.com/736x/72/08/c8/7208c869208a28de1946bacc44103307.jpg", link: "https://uk.pinterest.com/pin/581597739416524101/" },
+  { title: "Emojis", description: "An emoji set i drew", tags: ["oEmoji","Pinterest","Art"], image: "https://i.pinimg.com/736x/9c/6f/f5/9c6ff55ac65f791c0e5fbe8d2d4f6aa8.jpg", link: "https://uk.pinterest.com/pin/581597739416141157/" },
+  { title: "oWink", description: "An emoji i drew", tags: ["oEmoji","Pinterest","Art"], image: "https://i.pinimg.com/736x/dd/3b/c2/dd3bc2efab0c2937f7ca24af26d23afa.jpg", link: "https://uk.pinterest.com/pin/581597739416173128/" },
+  { title: "oDrool", description: "An emoji i drew", tags: ["oEmoji","Pinterest","Art"], image: "https://i.pinimg.com/736x/f4/cd/1f/f4cd1f7833767a128befc6cc94b7a209.jpg", link: "https://uk.pinterest.com/pin/581597739416173154/" },
+  { title: "oSweat", description: "An emoji i drew", tags: ["oEmoji","Pinterest","Art"], image: "https://i.pinimg.com/736x/49/06/a2/4906a253a13231746c47a01592268c16.jpg", link: "https://uk.pinterest.com/pin/581597739416141145/" },
+  { title: "oConfused", description: "An emoji i drew", tags: ["oEmoji","Pinterest","Art"], image: "https://i.pinimg.com/736x/cd/27/fe/cd27fe2c5d64278719313f498db15e79.jpg", link: "https://uk.pinterest.com/pin/581597739416141144/" },
+  { title: "oThinking", description: "An emoji i drew", tags: ["oEmoji","Pinterest","Art"], image: "https://i.pinimg.com/736x/e7/37/8b/e7378b03fe01f4045bff283fb7e69d5b.jpg", link: "https://uk.pinterest.com/pin/581597739416141143/" },
+  { title: "oRelieved", description: "An emoji i drew", tags: ["oEmoji","Pinterest","Art"], image: "https://i.pinimg.com/736x/0b/ca/ca/0bcaca4810930b889fb43bd0fbfd9542.jpg", link: "https://uk.pinterest.com/pin/581597739416141141/" },
+  { title: "oShocked", description: "An emoji i drew", tags: ["oEmoji","Pinterest","Art"], image: "https://i.pinimg.com/736x/e0/ef/a9/e0efa9b93c45dc69f420887c1df1d9a8.jpg", link: "https://uk.pinterest.com/pin/581597739416141142/" },
+  { title: "oSad", description: "An emoji i drew", tags: ["oEmoji","Pinterest","Art"], image: "https://i.pinimg.com/736x/49/76/60/497660787715a743f1f5a986e331f8f3.jpg", link: "https://uk.pinterest.com/pin/581597739416141139/" },
+  { title: "oPleading", description: "An emoji i drew", tags: ["oEmoji","Pinterest","Art"], image: "https://i.pinimg.com/736x/61/0b/99/610b9903a63636075717f9aa36957824.jpg", link: "https://uk.pinterest.com/pin/581597739416141140/" },
+  { title: "oHappy", description: "An emoji i drew", tags: ["oEmoji","Pinterest","Art"], image: "https://i.pinimg.com/736x/db/f8/17/dbf8170d07d90e6ad9bb97320d168c22.jpg", link: "https://uk.pinterest.com/pin/581597739416141138/" },
+  { title: "oGrin", description: "An emoji i drew", tags: ["oEmoji","Pinterest","Art"], image: "https://i.pinimg.com/736x/55/64/85/5564858e81f5a9cec71ef13e595955e4.jpg", link: "https://uk.pinterest.com/pin/581597739416141136/" },
+  { title: "oWhat", description: "An emoji i drew", tags: ["oEmoji","Pinterest","Art"], image: "https://i.pinimg.com/736x/8a/87/59/8a87594f840e4e25d58d65f37c370143.jpg", link: "https://uk.pinterest.com/pin/581597739416141137/" },
+  { title: "oAngel", description: "An emoji i drew", tags: ["oEmoji","Pinterest","Art"], image: "https://i.pinimg.com/736x/04/c3/ab/04c3ab4a2bc1f1ef951fcc8ff1d9b31b.jpg", link: "https://uk.pinterest.com/pin/581597739416141132/" },
+  { title: "oCool", description: "An emoji i drew", tags: ["oEmoji","Pinterest","Art"], image: "https://i.pinimg.com/736x/e2/e6/33/e2e6339edfc297145305eab613aa1a30.jpg", link: "https://uk.pinterest.com/pin/581597739416141131/" },
+  { title: "oShrinkie", description: "An emoji i drew", tags: ["oEmoji","Pinterest","Art"], image: "https://i.pinimg.com/736x/af/dc/57/afdc578d14508938c48c9505bd8fb6b3.jpg", link: "https://uk.pinterest.com/pin/581597739416141133/" },
+  { title: "oCrush", description: "An emoji i drew", tags: ["oEmoji","Pinterest","Art"], image: "https://i.pinimg.com/736x/95/4b/bd/954bbdac7f2f72b557cc30096500fd42.jpg", link: "https://uk.pinterest.com/pin/581597739416141135/" },
+  { title: "oBlush", description: "An emoji i drew", tags: ["oEmoji","Pinterest","Art"], image: "https://i.pinimg.com/736x/99/8d/0e/998d0e8a49670e77e5a686e61f931ca2.jpg", link: "https://uk.pinterest.com/pin/581597739416141134/" },
+  { title: "oCry", description: "An emoji i drew", tags: ["oEmoji","Pinterest","Art"], image: "https://i.pinimg.com/736x/16/b7/47/16b7478b993ae743c4d6908a094a0033.jpg", link: "https://uk.pinterest.com/pin/581597739416141129/" },
+  { title: "oSmile", description: "An emoji i drew", tags: ["oEmoji","Pinterest","Art"], image: "https://i.pinimg.com/736x/7e/91/8d/7e918ddee59c0480c5fc021456b22b1a.jpg", link: "https://uk.pinterest.com/pin/581597739416141130/" },
+  { title: "oPensive", description: "An emoji i drew", tags: ["oEmoji","Pinterest","Art"], image: "https://i.pinimg.com/736x/de/1a/a1/de1aa1a70810e142a15f4ea620e446ff.jpg", link: "https://uk.pinterest.com/pin/581597739416141128/" },
+  { title: "oColonthree", description: "An emoji i drew", tags: ["oEmoji","Pinterest","Art"], image: "https://i.pinimg.com/736x/9f/4e/22/9f4e2286f18c9312152e22a3fac26e47.jpg", link: "https://uk.pinterest.com/pin/581597739416141127/" }
 ];
 
 let tagState = {};
@@ -412,8 +478,8 @@ Object.keys(tagLibrary).forEach(main => {
 function updateTagStatus(row, tag) {
   const wh = row.querySelector(".wh");
   const bl = row.querySelector(".bl");
-  wh.style.color = tagState[tag] === "whitelist" ? "var(--accent)" : "inherit";
-  bl.style.color = tagState[tag] === "blacklist" ? "var(--danger)" : "inherit";
+  wh.style.color = tagState[tag] === "whitelist" ? "var(--high_accent_colour)" : "inherit";
+  bl.style.color = tagState[tag] === "blacklist" ? "var(--high_accent_colour)" : "inherit";
 }
 
 function getFilteredProjects() {
