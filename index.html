@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
 <style>
+/* -------------------- THEMES -------------------- */
 .forest-theme {
   --radius: 6px;
   --background_colour: #0a0c0a;
@@ -19,7 +20,6 @@
   --primary_colour: #2d302e;
   --secondary_colour: #0a0c0a;
 }
-
 .desert-theme {
   --radius: 6px;
   --background_colour: #0a0c0a;
@@ -32,249 +32,77 @@
   --secondary_colour: #11100E;
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
-
-body {
-  background: var(--background_colour);
-  color: var(--text_colour);
-  line-height: 1.5;
-}
+/* -------------------- GENERAL -------------------- */
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+body { background: var(--background_colour); color: var(--text_colour); line-height: 1.5; }
 
 #toolbar {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 56px;
-  height: 100vh;
+  position: fixed; left: 0; top: 0; width: 56px; height: 100vh;
   background: linear-gradient(to bottom, var(--primary_colour), var(--secondary_colour));
-  display: flex;
-  flex-direction: column;
-  padding: 4px;
-  gap: 10px;
-  z-index: 1000;
-  border-radius: 8px;
+  display: flex; flex-direction: column; padding: 4px; gap: 10px; z-index: 1000; border-radius: 8px;
 }
-
 .toolbar-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: flex; flex-direction: column; align-items: center;
   background: linear-gradient(to bottom, var(--primary_colour), var(--secondary_colour));
   border: 2px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
 }
-
-.toolbar-section a,
-.toolbar-section button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 6px;
-  text-decoration: none;
-  color: var(--mid_accent_colour);
-  font-size: 20px;
-  background: none;
-  border: none;
-  cursor: pointer;
+.toolbar-section a, .toolbar-section button {
+  display: flex; justify-content: center; align-items: center;
+  width: 48px; height: 48px; border-radius: 6px;
+  text-decoration: none; color: var(--mid_accent_colour);
+  font-size: 20px; background: none; border: none; cursor: pointer;
   position: relative;
 }
-
-.toolbar-section a:hover,
-.toolbar-section button:hover {
-  color: var(--high_accent_colour);
+.toolbar-section a:hover, .toolbar-section button:hover { color: var(--high_accent_colour); }
+.toolbar-section a .tooltip, .toolbar-section button .tooltip {
+  position: absolute; left: 60px; top: 50%; transform: translateY(-50%);
+  background: var(--background_colour); padding: 4px 8px; border-radius: 4px;
+  font-size: 12px; white-space: nowrap; opacity: 0; pointer-events: none;
 }
+.toolbar-section a:hover .tooltip, .toolbar-section button:hover .tooltip { opacity: 1; }
 
-.toolbar-section a .tooltip,
-.toolbar-section button .tooltip {
-  position: absolute;
-  left: 60px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: var(--background_colour);
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-}
+.spacer { width: 48px; height: 48px; }
+.dash-spacer { width: 36px; height: 3px; background: rgba(255,255,255,0.15); border-radius: 2px; margin: 4px 0; }
 
-.toolbar-section a:hover .tooltip,
-.toolbar-section button:hover .tooltip {
-  opacity: 1;
-}
+.toolbar-section input, #tagFilter { display: none; position: absolute; left: 56px; z-index: 10; }
+#tagFilter { background: var(--background_colour); border: 1px solid var(--low_accent_colour); border-radius: 4px; overflow-y: auto; padding: 4px; font-size: 12px; color: var(--text_colour); width: 250px; }
 
-.spacer {
-  width: 48px;
-  height: 48px;
-}
+.tag-main { margin: 4px 0; }
+.tag-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 2px 4px; border-radius: 4px; }
+.tag-header:hover { background: rgba(255,255,255,0.05); }
+.tag-main .toggle { font-size: 12px; opacity: 0.7; }
+.tag-sub { display: flex; gap: 4px; margin: 2px 0; padding-left: 10px; }
+.tag-sub span.label { flex-grow: 1; cursor: pointer; }
+.tag-sub span.label:hover {filter: brightness(1.2); }
+.tag-sub span.status { font-weight: bold; display: flex; gap: 2px; }
+.tag-sub span.status span { cursor: pointer; padding: 0 2px; }
 
-.dash-spacer {
-  width: 36px;
-  height: 3px;
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 2px;
-  margin: 4px 0;
-}
+#tagFilter::-webkit-scrollbar { width: 6px; }
+#tagFilter::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
 
-.toolbar-section input,
-#tagFilter {
-  display: none;
-  position: absolute;
-  left: 56px;
-  z-index: 10;
-}
+main { margin-left: 57px; padding: 0.25rem; }
+.grid { width: 100%; }
 
-#tagFilter {
-  background: var(--background_colour);
-  border: 1px solid var(--low_accent_colour);
-  border-radius: 4px;
-  overflow-y: auto;
-  padding: 4px;
-  font-size: 12px;
-  color: var(--text_colour);
-  width: 250px;
-}
-
-.tag-main {
-  margin: 4px 0;
-}
-
-.tag-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  padding: 2px 4px;
-  border-radius: 4px;
-}
-
-.tag-header:hover {
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.tag-main .toggle {
-  font-size: 12px;
-  opacity: 0.7;
-}
-
-.tag-sub {
-  display: flex;
-  gap: 4px;
-  margin: 2px 0;
-  padding-left: 10px;
-}
-
-.tag-sub span.label {
-  flex-grow: 1;
-  cursor: pointer;
-}
-
-.tag-sub span.status {
-  font-weight: bold;
-  display: flex;
-  gap: 2px;
-}
-
-.tag-sub span.status span {
-  cursor: pointer;
-  padding: 0 2px;
-}
-
-#tagFilter::-webkit-scrollbar {
-  width: 6px;
-}
-
-#tagFilter::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 3px;
-}
-
-main {
-  margin-left: 57px;
-  padding: 7px;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 0.5rem;
-}
-
+/* -------------------- CARDS -------------------- */
 .card {
-  background: var(--card_background_colour);
-  border-radius: var(--radius);
-  overflow: hidden;
-  border: 1px solid var(--low_accent_colour);
-  transition: border-color 0.1s ease, transform 0.1s ease, opacity 0.1s ease;
-  cursor: pointer;
-  opacity: 0;
+  display: block; width: 200px; margin-bottom: 8px;
+  transition: transform 0.1s ease;
+  cursor: pointer; background: var(--card_background_colour); border-radius: var(--radius); overflow: hidden;
 }
+.card:hover { transform: translateY(-2px); }
 
-.card.visible {
-  opacity: 1;
-}
+.thumb { width: 100%; display: flex; align-items: center; justify-content: center; }
+.thumb img { width: 100%; height: auto; display: block; }
 
-.card:hover {
-  border-color: var(--high_accent_colour);
-  transform: translateY(-2px);
-}
+.card-content { padding: 0.2rem; }
+.tag-sub-card { display: inline-block; font-size: 0.6rem; color: #fff; border: 1px solid #fff; margin-right: 3px; padding: 0 4px; border-radius: 3px; margin-bottom: 2px; }
+.tag-sub-card:hover { filter: brightness(1.2); cursor: help; }
 
-.thumb {
-  height: 256px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+.title { font-size: 0.95rem; font-weight: 500; margin-bottom: 0.2rem; }
+.desc { font-size: 0.8rem; color: var(--text_colour); }
 
-.thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.card-content {
-  padding: 0.4rem;
-}
-
-.tag-sub-card {
-  display: inline-block;
-  font-size: 0.6rem;
-  color: #fff;
-  border: 1px solid #fff;
-  margin-right: 3px;
-  padding: 0 4px;
-  border-radius: 4px;
-  margin-bottom: 2px;
-}
-
-.tag-sub-card:hover {
-  filter: brightness(1.2);
-  cursor: help;
-}
-
-.title {
-  font-size: 0.95rem;
-  font-weight: 500;
-  margin-bottom: 0.2rem;
-}
-
-.desc {
-  font-size: 0.8rem;
-  color: var(--text_colour);
-}
-
-.toolbar-section button.active {
-  color: var(--high_accent_colour);
-  box-shadow: inset 0 0 0 1px rgba(108, 242, 194, 0.4);
-}
+.toolbar-section button.active { color: var(--high_accent_colour); box-shadow: inset 0 0 0 1px rgba(108, 242, 194, 0.4); }
 </style>
 </head>
 <body class="forest-theme">
@@ -283,13 +111,10 @@ main {
   <div class="toolbar-section">
     <button id="searchBtn"><i class="fas fa-search"></i><span class="tooltip">Search</span></button>
     <input type="text" id="searchInput" placeholder="Search…" />
-
     <button id="filterBtn"><i class="fas fa-tags"></i><span class="tooltip">Filter by tags</span></button>
     <div id="tagFilter"></div>
-
     <button id="colsBtn"><i class="fas fa-columns"></i><span class="tooltip">Columns</span></button>
     <input type="number" id="colsInput" value="5" min="1" max="420" />
-
     <span class="spacer"></span>
   </div>
 
@@ -300,30 +125,17 @@ main {
     <span class="dash-spacer"></span>
     <a href="https://linktr.ee/oSzoukaua" title="Linktree"><i class="fas fa-link"></i><span class="tooltip">Linktree</span></a>
   </div>
-
-  <div class="toolbar-section">
-    <button title="MOTD"><span class="star">*</span><span class="tooltip">Grab Donald trump by the pussy an' call him a fascist! Cuz' we're gettin' fucked!</span></button>
-  </div>
 </div>
 
 <main>
   <div class="grid" id="projectsGrid"></div>
-  <div id="scrollSentinel"></div>
+  <div id="scrollSentinel" style="height:1px;"></div>
 </main>
 
-<script>
-const projectsGrid = document.getElementById("projectsGrid");
-const searchBtn = document.getElementById("searchBtn");
-const filterBtn = document.getElementById("filterBtn");
-const colsBtn = document.getElementById("colsBtn");
-const searchInput = document.getElementById("searchInput");
-const colsInput = document.getElementById("colsInput");
-const tagFilter = document.getElementById("tagFilter");
+<script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
 
-let currentCols = 5;
-let searchTerm = "";
-let page = 0;
-const pageSize = 10;
+<script>
 
 const tagLibrary = {
   "3D Asset": [
@@ -425,11 +237,69 @@ const projects = [
   { title: "oColonthree", description: "An emoji i drew", tags: ["oEmoji","Pinterest","Art"], image: "https://i.pinimg.com/736x/9f/4e/22/9f4e2286f18c9312152e22a3fac26e47.jpg", link: "https://uk.pinterest.com/pin/581597739416141127/" }
 ];
 
-let tagState = {};
+/* -------------------- VARIABLES -------------------- */
+const projectsGrid = document.getElementById("projectsGrid");
+const sentinel = document.getElementById("scrollSentinel");
+let msnry = null;
+let isLoading = false;
+let page = 0;
+const pageSize = 10;
+let filteredProjects = [];
+let searchTerm = "";
+let tagState = {}; // tag name => "whitelist" | "blacklist"
+
+/* -------------------- SEARCH/FILTER/COLUMNS PANEL TOGGLE -------------------- */
+const searchBtn = document.getElementById("searchBtn");
+const filterBtn = document.getElementById("filterBtn");
+const colsBtn = document.getElementById("colsBtn");
+const colsInput = document.getElementById("colsInput");
+
+function togglePanel(panel, button) {
+  const open = window.getComputedStyle(panel).display === "block";
+  [searchInput, tagFilter, colsInput].forEach(p => p.style.display = "none");
+  [searchBtn, filterBtn, colsBtn].forEach(b => b.classList.remove("active"));
+  if (!open) {
+    panel.style.display = "block";
+    button.classList.add("active");
+    if (panel === searchInput || panel === colsInput) panel.focus();
+  }
+}
+
+searchBtn.onclick = () => togglePanel(searchInput, searchBtn);
+filterBtn.onclick = () => togglePanel(tagFilter, filterBtn);
+colsBtn.onclick = () => togglePanel(colsInput, colsBtn);
+
+/* -------------------- COLUMN COUNT CHANGE -------------------- */
+function updateColumns() {
+    const cols = parseInt(colsInput.value) || 1;
+    const containerWidth = projectsGrid.clientWidth;
+    const gutter = 4; // same as Masonry gutter
+    const cardWidth = (containerWidth - (cols - 1) * gutter) / cols;
+
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(c => c.style.width = `${cardWidth}px`);
+
+    if (msnry) msnry.layout();
+}
+
+colsInput.oninput = updateColumns;
+
+/* -------------------- FILTERING -------------------- */
+function getFilteredProjects() {
+  return projects.filter(p => {
+    if (searchTerm && !p.title.toLowerCase().includes(searchTerm.toLowerCase())) return false;
+    for (const [tag, status] of Object.entries(tagState)) {
+      if (status === "whitelist" && !p.tags.includes(tag)) return false;
+      if (status === "blacklist" && p.tags.includes(tag)) return false;
+    }
+    return true;
+  });
+}
 
 Object.keys(tagLibrary).forEach(main => {
   const container = document.createElement("div");
   container.className = "tag-main";
+
   container.innerHTML = `
     <div class="tag-header">
       <span>${main}</span>
@@ -442,6 +312,7 @@ Object.keys(tagLibrary).forEach(main => {
   container.appendChild(subContainer);
   tagFilter.appendChild(container);
 
+  // Toggle collapse
   container.querySelector(".tag-header").addEventListener("click", () => {
     const toggle = container.querySelector(".toggle");
     const open = subContainer.style.display === "none";
@@ -459,16 +330,22 @@ Object.keys(tagLibrary).forEach(main => {
       </span>
     `;
 
-    row.querySelector(".wh").addEventListener("click", () => {
+    // W button
+    row.querySelector(".wh").addEventListener("click", e => {
+      e.stopPropagation();
       tagState[tag.name] = tagState[tag.name] === "whitelist" ? null : "whitelist";
       updateTagStatus(row, tag.name);
       renderProjects(true);
+	  updateColumns();
     });
 
-    row.querySelector(".bl").addEventListener("click", () => {
+    // B button
+    row.querySelector(".bl").addEventListener("click", e => {
+      e.stopPropagation();
       tagState[tag.name] = tagState[tag.name] === "blacklist" ? null : "blacklist";
       updateTagStatus(row, tag.name);
       renderProjects(true);
+	  updateColumns();
     });
 
     subContainer.appendChild(row);
@@ -482,94 +359,100 @@ function updateTagStatus(row, tag) {
   bl.style.color = tagState[tag] === "blacklist" ? "var(--high_accent_colour)" : "inherit";
 }
 
-function getFilteredProjects() {
-  return projects.filter(p => {
-    if (searchTerm && !p.title.toLowerCase().includes(searchTerm.toLowerCase())) return false;
-    for (const [tag, status] of Object.entries(tagState)) {
-      if (status === "whitelist" && !p.tags.includes(tag)) return false;
-      if (status === "blacklist" && p.tags.includes(tag)) return false;
+/* -------------------- CREATE CARD -------------------- */
+function createCard(project) {
+  const card = document.createElement("div");
+  card.className = "card";
+  card.onclick = () => window.open(project.link, "_blank");
+
+  const tagHtml = project.tags.map(tagKey => {
+    for (const group in tagLibrary) {
+      const t = tagLibrary[group].find(t => t.name === tagKey);
+      if (t) return `<span class="tag-sub-card" style="border-color:${t.color}; background: color-mix(in srgb, ${t.color} 20%, black 80%)">${tagKey}</span>`;
     }
-    return true;
-  });
+    return "";
+  }).join("");
+
+  card.innerHTML = `
+    <div class="thumb"><img src="${project.image}" alt="${project.title}"></div>
+    <div class="card-content">
+      <div>${tagHtml}</div>
+      <div class="title">${project.title}</div>
+      <p class="desc">${project.description}</p>
+    </div>
+  `;
+  return card;
 }
 
-function renderProjects(reset = false) {
-  if (reset) {
-    projectsGrid.innerHTML = "";
-    page = 0;
-  }
-
-  const filtered = getFilteredProjects();
-  const start = page * pageSize;
-  const end = start + pageSize;
-  if (start >= filtered.length) return;
-
-  projectsGrid.style.gridTemplateColumns = `repeat(${currentCols}, 1fr)`;
-
-  filtered.slice(start, end).forEach(p => {
-    const card = document.createElement("div");
-    card.className = "card";
-    card.onclick = () => window.open(p.link, "_blank");
-
-    let tagHtml = "";
-    p.tags.forEach(tagKey => {
-      for (const group in tagLibrary) {
-        const t = tagLibrary[group].find(t => t.name === tagKey);
-        if (!t) continue;
-        tagHtml += `<span class="tag-sub-card" style="border-color:${t.color}; background: color-mix(in srgb, ${t.color} 20%, black 80%)">${tagKey}</span>`;
-      }
+/* -------------------- INFINITE SCROLL - LAST CARD OBSERVER -------------------- */
+let observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting && !isLoading) {
+            observer.unobserve(entry.target); // stop observing current card
+            renderProjects(); // load next batch
+        }
     });
-
-    card.innerHTML = `
-      <div class="thumb"><img src="${p.image}" alt="${p.title}"></div>
-      <div class="card-content">
-        <div>${tagHtml}</div>
-        <div class="title">${p.title}</div>
-        <p class="desc">${p.description}</p>
-      </div>
-    `;
-
-    projectsGrid.appendChild(card);
-    requestAnimationFrame(() => card.classList.add("visible"));
-  });
-
-  page++;
-}
-
-function togglePanel(panel, button) {
-  const open = window.getComputedStyle(panel).display === "block";
-
-  [searchInput, tagFilter, colsInput].forEach(p => p.style.display = "none");
-  [searchBtn, filterBtn, colsBtn].forEach(b => b.classList.remove("active"));
-
-  if (!open) {
-    panel.style.display = "block";
-    button.classList.add("active");
-  }
-}
-
-searchBtn.onclick = () => { togglePanel(searchInput, searchBtn); searchInput.focus(); };
-filterBtn.onclick = () => togglePanel(tagFilter, filterBtn);
-colsBtn.onclick = () => { togglePanel(colsInput, colsBtn); colsInput.focus(); };
-
-searchInput.oninput = () => { searchTerm = searchInput.value; renderProjects(true); };
-colsInput.oninput = () => { currentCols = parseInt(colsInput.value) || 5; renderProjects(true); };
-
-renderProjects();
-
-const sentinel = document.getElementById("scrollSentinel");
-
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      renderProjects();
-    }
-  });
 }, {
-  rootMargin: "200px", // trigger before reaching bottom
+    rootMargin: "200px", // trigger a bit before last card fully enters viewport
 });
 
-observer.observe(sentinel);
+/* -------------------- RENDER PROJECTS -------------------- */
+function renderProjects(reset = false) {
+    if (reset) {
+        projectsGrid.innerHTML = "";
+        page = 0;
+        filteredProjects = getFilteredProjects();
+        msnry?.destroy();
+        msnry = null;
+        isLoading = false;
+    }
+
+    const start = page * pageSize;
+    const end = start + pageSize;
+    const pageProjects = filteredProjects.slice(start, end);
+
+    if (!pageProjects.length) return; // no more projects to render
+
+    isLoading = true;
+    const newCards = pageProjects.map(createCard);
+    newCards.forEach(card => projectsGrid.appendChild(card));
+
+    imagesLoaded(newCards, { background: true }, () => {
+        if (!msnry) {
+            msnry = new Masonry(projectsGrid, {
+                itemSelector: '.card',
+                columnWidth: '.card',
+                gutter: 4,
+                percentPosition: true,
+                transitionDuration: '0'
+            });
+        } else {
+            msnry.appended(newCards);
+            msnry.layout();
+			updateColumns();
+        }
+
+        isLoading = false;
+        page++;
+
+        // Observe the new last card
+        const lastCard = newCards[newCards.length - 1];
+        if (lastCard) observer.observe(lastCard);
+    });
+}
+
+/* -------------------- SEARCH INPUT -------------------- */
+const searchInput = document.getElementById("searchInput");
+searchInput.oninput = () => {
+  searchTerm = searchInput.value;
+  renderProjects(true); // reset grid
+};
+
+/* -------------------- INITIAL LOAD -------------------- */
+filteredProjects = getFilteredProjects();
+renderProjects(true); // render first batch
+updateColumns();
+populateTagFilter();
 </script>
 </body>
 </html>
